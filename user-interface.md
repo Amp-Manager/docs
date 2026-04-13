@@ -20,20 +20,20 @@ This document describes the UI architecture, components, and patterns used in AM
 
 ## Project Structure
 
-```
+```text
 src/
-|-- components/
-|   |-- dashboard/        # Dashboard widgets & stats
-|   |-- workflow/        # Workflow builder components
-|   |   |-- nodes/       # React Flow custom nodes
-|   |   |-- Inspector/   # Property inspector panel
-|   |   |-- hooks/       # Workflow-specific hooks
-|   |   |-- ...
-|-- pages/               # Route pages
-|-- context/             # React Context providers
-|-- stores/              # Zustand stores
-|-- services/            # OOP backend services
-|-- types/               # TypeScript definitions
+├── components/
+│   ├── dashboard/       # Dashboard widgets & stats
+│   └── workflow/        # Workflow builder components
+│       ├── nodes/       # React Flow custom nodes
+│       ├── Inspector/   # Property inspector panel
+│       ├── hooks/       # Workflow-specific hooks
+│       └── ...
+├── pages/               # Route pages
+├── context/             # React Context providers
+├── stores/              # Zustand stores
+├── services/            # OOP backend services
+└── types/               # TypeScript definitions
 ```
 
 ## Styling Patterns
@@ -340,6 +340,6 @@ export function MyComponent({ className, variant = 'primary' }: MyComponentProps
 
 ## See Also
 
-- [Component Reference](./06-Component-Reference) - Creating components
+- [Component Reference](./component-reference) - Creating components
 - [State Management](./state-management) - Data storage choices
 - [API Reference](./api-reference) - Backend services
