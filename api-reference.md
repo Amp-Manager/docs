@@ -2,7 +2,6 @@
 
 Complete reference for the AMPBridge service and backend communication.
 
----
 
 ## AMPBridge Service
 
@@ -21,7 +20,6 @@ import { ampBridge } from '@/services/AMPBridge';
 const bridge = ampBridge;
 ```
 
----
 
 ## System APIs
 
@@ -29,7 +27,8 @@ const bridge = ampBridge;
 
 Get AMP Manager version info.
 
-**Returns:**
+**Returns:**  
+
 ```typescript
 {
   status: string;
@@ -39,13 +38,14 @@ Get AMP Manager version info.
 }
 ```
 
-**Example:**
+**Example:**  
+
 ```typescript
 const info = await ampBridge.version();
 // { status: 'ok', version: '1.1.0', build: '20240101', engine: 'Neutralino' }
 ```
 
----
+
 
 ### `ampBridge.status()`
 
@@ -53,7 +53,7 @@ Get overall system status.
 
 **Returns:** `AmpResponse`
 
----
+
 
 ### `ampBridge.runtimeStatus()`
 
@@ -61,13 +61,14 @@ Get runtime status including Docker containers.
 
 **Returns:** `AmpResponse`
 
----
+
 
 ### `ampBridge.envCheck()`
 
 Verify environment and get project root.
 
-**Returns:**
+**Returns:**  
+
 ```typescript
 {
   status: string;
@@ -76,13 +77,13 @@ Verify environment and get project root.
 }
 ```
 
-**Example:**
+**Example:**  
+
 ```typescript
 const env = await ampBridge.envCheck();
 // { status: 'ok', project_root: 'C:\\amp' }
 ```
 
----
 
 ### `ampBridge.clearCache()`
 
@@ -90,7 +91,6 @@ Clear application cache.
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.clearLogs()`
 
@@ -98,7 +98,6 @@ Clear log files.
 
 **Returns:** `AmpResponse`
 
----
 
 ## Domain APIs
 
@@ -108,7 +107,6 @@ Scan Windows hosts file for domain entries.
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.listDomains()`
 
@@ -116,13 +114,13 @@ List all configured domains.
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.createDomain(name, options?)`
 
 Create a new local domain.
 
-**Parameters:**
+**Parameters:**  
+
 | Name | Type | Description |
 |------|------|-------------|
 | `name` | `string` | Domain name (without .local) |
@@ -130,25 +128,26 @@ Create a new local domain.
 
 **Returns:** `AmpResponse`
 
-**Example:**
+**Example:**  
+
 ```typescript
 const result = await ampBridge.createDomain('myproject', { scaffold: true });
 ```
 
----
+
 
 ### `ampBridge.removeDomain(name)`
 
 Remove a domain.
 
-**Parameters:**
+**Parameters:**  
+
 | Name | Type | Description |
 |------|------|-------------|
 | `name` | `string` | Domain name to remove |
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.generateConfig(domain)`
 
@@ -161,7 +160,6 @@ Regenerate domain configuration.
 
 **Returns:** `AmpResponse`
 
----
 
 ## Database APIs
 
@@ -176,7 +174,8 @@ Execute database query via amp-tasks.bat.
 
 **Returns:** `AmpResponse`
 
-**Example:**
+**Example:**  
+
 ```typescript
 // List databases
 const dbs = await ampBridge.dbQuery('LIST');
@@ -188,7 +187,6 @@ await ampBridge.dbQuery('mydb|||user|||password');
 await ampBridge.dbQuery('deletemydb');
 ```
 
----
 
 ## Certificate APIs (CA)
 
@@ -198,7 +196,6 @@ Check Certificate Authority status.
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.caReset()`
 
@@ -206,7 +203,6 @@ Reset/reinstall CA certificate.
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.caUninstall()`
 
@@ -214,20 +210,19 @@ Uninstall CA certificate.
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.regenerateSsl(domain)`
 
 Regenerate SSL for a domain.
 
-**Parameters:**
+**Parameters:**  
+
 | Name | Type | Description |
 |------|------|-------------|
 | `domain` | `string` | Domain name |
 
 **Returns:** `AmpResponse`
 
----
 
 ### `ampBridge.regenerateAllSsl()`
 
@@ -235,7 +230,6 @@ Regenerate SSL for all domains.
 
 **Returns:** `AmpResponse`
 
----
 
 ## SSH Key APIs
 
@@ -244,6 +238,7 @@ Regenerate SSL for all domains.
 Check SSH key status.
 
 **Returns:**
+
 ```typescript
 AmpResponse & {
   key_exists: boolean;
@@ -253,7 +248,6 @@ AmpResponse & {
 }
 ```
 
----
 
 ### `ampBridge.sshKeyGenerate(username)`
 
@@ -265,6 +259,7 @@ Generate new SSH key pair.
 | `username` | `string` | Username for key comment |
 
 **Returns:**
+
 ```typescript
 AmpResponse & {
   key_path?: string;
@@ -273,7 +268,6 @@ AmpResponse & {
 }
 ```
 
----
 
 ## OS APIs
 
@@ -290,7 +284,6 @@ ampBridge.os.showSaveDialog(title: string, options?: any): Promise<string>
 ampBridge.os.showOpenDialog(title: string, options?: any): Promise<string[]>
 ```
 
----
 
 ## Filesystem APIs
 
@@ -307,7 +300,6 @@ ampBridge.fs.readDirectory(path: string): Promise<any[]>
 ampBridge.fs.getFolderSize(path: string): Promise<string>
 ```
 
----
 
 ## Angie APIs
 
@@ -321,7 +313,6 @@ ampBridge.angie.reload(): Promise<void>
 ampBridge.angie.liveStatus(): Promise<AmpResponse>
 ```
 
----
 
 ## Docker APIs
 
@@ -342,7 +333,6 @@ ampBridge.docker.restartRuntime(): Promise<AmpResponse>
 ampBridge.docker.restartFullStack(): Promise<AmpResponse>
 ```
 
----
 
 ## Workflow APIs
 
@@ -360,7 +350,6 @@ ampBridge.workflow.sftpWithCustomKey(host: string, username: string, localPath: 
 ampBridge.workflow.webhook(url: string, data: string): Promise<AmpResponse>
 ```
 
----
 
 ## Event APIs
 
@@ -374,7 +363,6 @@ ampBridge.events.off(event: string, handler: (data: any) => void): void
 ampBridge.events.dispatch(event: string, data?: any): void
 ```
 
----
 
 ## Window APIs
 
@@ -391,7 +379,6 @@ ampBridge.window.close(): void
 ampBridge.window.setDraggableRegion(id: string): void
 ```
 
----
 
 ## App APIs
 
@@ -403,7 +390,6 @@ Application control.
 ampBridge.app.exit(): void
 ```
 
----
 
 ## Service Layer
 
@@ -418,7 +404,6 @@ await databaseService.deleteDatabase('mydb');
 await databaseService.launchTool('https://localhost:8080', 'url');
 ```
 
----
 
 ## Type Definitions
 
@@ -453,7 +438,6 @@ interface DockerDisk {
 }
 ```
 
----
 
 ## Usage Examples
 
@@ -482,7 +466,6 @@ if (result.status === 'ok') {
 const content = await ampBridge.fs.readTextFile('C:\\amp\\config\\app.conf');
 ```
 
----
 
 ## NeutralinoJS Freeze Prevention
 
@@ -522,7 +505,6 @@ if (isDevMode()) {
 }
 ```
 
----
 
 ## See Also
 
