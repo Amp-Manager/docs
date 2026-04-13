@@ -2,29 +2,28 @@
 
 How to create new pages, components, and features in AMP Manager.
 
----
 
 ## Project Structure
 
-```
+```text
 src/
-|-- components/       # Reusable UI components
-|   |-- layout/       # Layout, Sidebar, Header
-|   |-- domains/      # Domain-related components
-|   |-- databases/    # Database components
-|   |-- settings/     # Settings panels
-|   |-- workflow/     # Workflow editor nodes
-|   |-- notes/        # Notes components
-|-- pages/            # Route pages (also in components)
-|-- services/         # Business logic (AMPBridge, DatabaseService)
-|-- context/          # React contexts (Auth, Sync)
-|-- hooks/            # Custom hooks (useProjectSync)
-|-- stores/           # Zustand stores
-|-- lib/              # Utilities (db, crypto)
-|-- types/            # TypeScript definitions
+├── components/
+│   ├── dashboard/       # Dashboard widgets & stats
+│   └── workflow/        # Workflow builder components
+│       ├── nodes/       # React Flow custom nodes
+│       ├── Inspector/   # Property inspector panel
+│       ├── hooks/       # Workflow-specific hooks
+│       └── ...
+├── pages/               # Route pages (also in components)
+├── services/            # Business logic (AMPBridge, DatabaseService)
+├── context/             # React contexts (Auth, Sync)
+├── hooks/               # Custom hooks (useProjectSync)
+├── stores/              # Zustand stores
+├── lib/                 # Utilities (db, crypto)
+└── types/               # TypeScript definitions
+
 ```
 
----
 
 ## Creating a New Page
 
@@ -63,7 +62,6 @@ import { MyNewPage } from './pages/MyNewPage';
 </NavItem>
 ```
 
----
 
 ## Creating a New Component
 
@@ -119,7 +117,6 @@ export function Counter() {
 }
 ```
 
----
 
 ## Using Existing Services
 
@@ -166,7 +163,6 @@ function MyComponent() {
 }
 ```
 
----
 
 ## Creating a Custom Hook
 
@@ -215,7 +211,6 @@ function MyComponent() {
 }
 ```
 
----
 
 ## Creating a Zustand Store
 
@@ -261,7 +256,6 @@ function MyComponent() {
 }
 ```
 
----
 
 ## Adding a Settings Panel
 
@@ -307,7 +301,6 @@ import { SettingsMyFeature } from '@/components/settings/SettingsMyFeature';
 <SettingsMyFeature />
 ```
 
----
 
 ## TypeScript Patterns
 
@@ -340,7 +333,6 @@ function processData(data: MyData): MyFormData {
 }
 ```
 
----
 
 ## Error Handling Patterns
 
@@ -373,7 +365,6 @@ async function handleAction() {
 }
 ```
 
----
 
 ## Styling with DaisyUI
 
@@ -415,7 +406,6 @@ AMP uses Tailwind CSS + DaisyUI. Use component classes:
 </dialog>
 ```
 
----
 
 ## Testing Your Changes
 
@@ -440,7 +430,6 @@ npm run lint
 # Checks TypeScript errors
 ```
 
----
 
 ## Common Patterns Reference
 
@@ -452,7 +441,6 @@ npm run lint
 | React Context | Shared state (Auth, Sync) |
 | JSON Storage | Persistent user data |
 
----
 
 ## See Also
 
