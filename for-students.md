@@ -179,7 +179,7 @@ Now that you have a site running:
 | Build a website | Add files to `D:\amp-manager\www\myportfolio` |
 | Use a database | Go to **Databases** -> Create one |
 | Add notes | Go to **Notes** -> Add a note |
-| Learn more | See [for-developers.md](../getting-started/for-developers.md) |
+| Learn more | See [for-developers.md](./getting-started/for-developers) |
 
 
 
@@ -197,6 +197,6 @@ Now that you have a site running:
 
 ## Need Help?
 
-1. Check [troubleshooting.md](../troubleshooting.md)
-2. Look at [workflows.md](../workflows.md) for deployment guides
+1. Check [troubleshooting.md](./troubleshooting)
+2. Look at [workflows.md](./workflows-deployment) for deployment guides
 3. Ask in the community forum

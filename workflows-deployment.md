@@ -4,7 +4,6 @@ AMP Manager's Workflow feature enables bi-directional automation:
 - **Push**: Local site -> Remote server (git/SFTP)
 - **Pull**: Remote repo -> Local site (git clone)
 
----
 
 ## How Workflows Work
 
@@ -42,7 +41,6 @@ flowchart TB
 | **Action** | What to do | Command, Git, SFTP |
 | **Target** | Where to go | Local domain, Git, SFTP, Webhook |
 
----
 
 ## Bi-Directional Workflows
 
@@ -78,7 +76,6 @@ sequenceDiagram
 - Clone a repository to local development
 - Pull latest changes from main branch
 
----
 
 ## SSH Key Authentication
 
@@ -94,7 +91,6 @@ AMP Manager automatically generates an SSH key pair when you first log in. This 
 
 **Golden Rule:** The private key never leaves your machine. Only the public key is shared.
 
----
 
 ## Which Key Do I Share?
 
@@ -109,7 +105,6 @@ SSH uses "asymmetric cryptography": what the public key encrypts, only the priva
 
 > "Imagine you have a secret handshake. The public key is like a video of someone else doing their half of the handshake. The private key is your half. When you connect, the server shows you the video (public key), and you complete the handshake with your secret move (private key). The server sees the full handshake works - but never learns your secret move."
 
----
 
 ## Getting Your Public Key
 
@@ -118,7 +113,6 @@ SSH uses "asymmetric cryptography": what the public key encrypts, only the priva
 3. Click **[Copy Public Key]**
 4. Paste it where needed (server, GitHub, etc.)
 
----
 
 ## Creating Your First Workflow
 
@@ -179,7 +173,6 @@ flowchart LR
    - Branch: `main`
 3. Domain context is used automatically
 
----
 
 ## Quick Reference: Workflow Combinations
 
@@ -192,7 +185,6 @@ flowchart LR
 | Local Domain | Webhook | External URL | Trigger webhook |
 | Local Domain | Shell Command | Local | Run npm/build |
 
----
 
 ## Credentials Vault
 
@@ -270,7 +262,6 @@ When creating SFTP actions in workflows:
 2. The username is auto-filled from the credential
 3. AMP handles key decryption automatically
 
----
 
 ## Deployment Platforms
 
@@ -302,7 +293,6 @@ chmod 600 ~/.ssh/authorized_keys
 3. Click **Import Key** or **Paste** your public key
 4. Click **Authorize**
 
----
 
 ## SFTP Deployment with Workflows
 
@@ -324,7 +314,6 @@ AMP Manager supports SFTP workflows for uploading files to servers.
 | **AMP Manager SSH Key** | Personal servers, VPS | Key stays on your machine |
 | **Custom SSH Key** | Shared projects, team credentials | Encrypted in Credentials Vault |
 
----
 
 ## Supported Platforms for SFTP
 
@@ -335,7 +324,6 @@ AMP Manager supports SFTP workflows for uploading files to servers.
 | Managed WordPress | Varies | Check with provider |
 | PaaS (Vercel, Heroku) | No | Use Git deploy instead |
 
----
 
 ## Troubleshooting
 
@@ -358,10 +346,9 @@ If key was deleted, regenerate it:
 2. Click **Regenerate Key**
 3. Update public key on all servers
 
----
 
 ## See Also
 
-- [Troubleshooting](./12-Troubleshooting.md) - Common issues
-- [Architecture Overview](./03-Architecture.md) - How AMP works
-- [State Management](./03-State-Management.md) - Data storage
+- [Troubleshooting](./troubleshooting) - Common issues
+- [Architecture Overview](./architecture) - How AMP works
+- [State Management](./state-management) - Data storage

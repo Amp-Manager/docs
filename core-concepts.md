@@ -195,4 +195,4 @@ Each step:
 
 ## Next Steps
 
-- [State Management](./03-State-Management.md) - JSON file storage and Zustand patterns
+- [State Management](./state-management) - JSON file storage and Zustand patterns

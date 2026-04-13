@@ -10,7 +10,7 @@ amp-tasks.bat <command> [arguments]
 
 All commands return JSON output for parsing by the frontend.
 
----
+
 
 ## Domain Management
 
@@ -28,6 +28,7 @@ amp-tasks.bat new_domain <domain> [scaffold]
 | `scaffold` | Optional: "scaffold" to copy template files |
 
 **Output:**
+
 ```json
 {
   "status": "ok",
@@ -78,8 +79,6 @@ List domains managed by AMP (with config/SSL status).
 amp-tasks.bat list_domains
 ```
 
----
-
 ## Certificate Authority (SSL)
 
 ### ca_status
@@ -122,8 +121,6 @@ Regenerate SSL for all domains.
 amp-tasks.bat regenerate_all_ssl
 ```
 
----
-
 ## SSH Keys
 
 ### ssh_key_status
@@ -142,7 +139,6 @@ Generate SSH key pair.
 amp-tasks.bat ssh_key_generate <username>
 ```
 
----
 
 ## Docker Control
 
@@ -194,7 +190,6 @@ Launch Docker Desktop application.
 amp-tasks.bat docker_desktop_launch
 ```
 
----
 
 ## Database
 
@@ -214,7 +209,6 @@ amp-tasks.bat db_query <query>
 | `delete<name>` | `db_query deletemydb` | Delete database |
 | `name\|\|user\|\|pass` | `db_query mydb\|\|myuser\|\|mypass` | Create database with user |
 
----
 
 ## Status & Health
 
@@ -262,7 +256,6 @@ Get Docker metrics (info, disk usage, running containers).
 amp-tasks.bat docker_env_metrics
 ```
 
----
 
 ## Workflows
 
@@ -307,7 +300,6 @@ Execute arbitrary command in domain folder.
 amp-tasks.bat workflow_action <domain> <command>
 ```
 
----
 
 ## Maintenance
 
@@ -327,7 +319,6 @@ Clear logs folder.
 amp-tasks.bat clear_logs
 ```
 
----
 
 ## Version
 
@@ -339,7 +330,6 @@ Get AMP Manager version.
 amp-tasks.bat version
 ```
 
----
 
 ## Error Response Format
 
@@ -352,9 +342,8 @@ All errors return:
 }
 ```
 
----
 
 ## See Also
 
-- [Workflows & Deployment](./09-Workflows-Deployment.md)
-- [Security Model](./08-Security.md)
+- [Workflows & Deployment](./workflows-deployment)
+- [Security Model](./security)

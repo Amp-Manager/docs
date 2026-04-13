@@ -108,5 +108,5 @@ amp-manager/
 
 ## Related Docs
 
-- [amp-tasks-reference](./04-Amp-Tasks-Reference.md) - All available commands
-- [Workflows & Deployment](./09-Workflows-Deployment.md) - SSH, SFTP, deployment
+- [Amp-tasks Reference](./amp-tasks-reference) - All available commands
+- [Workflows & Deployment](./workflows-deployment) - SSH, SFTP, deployment

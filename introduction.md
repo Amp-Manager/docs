@@ -63,20 +63,20 @@ AMP Manager provides a unified interface for:
 
 | Document | Description |
 |----------|-------------|
-| [Core Concepts](./01-Core-Concepts.md) | How AMP works |
-| [For Students](./02-For-Students.md) | Step-by-step for beginners |
-| [For Developers](./02-For-Developers.md) | Quick start for devs |
-| [Architecture](./03-Architecture.md) | System design |
-| [Amp Tasks Reference](./04-Amp-Tasks-Reference.md) | Batch commands |
-| [API Reference](./05-API-Reference.md) | AMPBridge API |
-| [Component Reference](./06-Component-Reference.md) | UI components |
-| [User Interface](./07-User-Interface.md) | UI tech stack |
-| [Security](./08-Security.md) | Security model |
-| [Workflows](./09-Workflows-Deployment.md) | Deployment guides |
-| [Tunneling](./10-Local-Tunneling.md) | Tunnel services |
-| [Contributing](./11-Contributing.md) | Developer guide |
-| [Troubleshooting](./12-Troubleshooting.md) | Common issues |
-| [Glossary](./13-Glossary.md) | Terms explained |
+| [Core Concepts](./01-Core-Concepts) | How AMP works |
+| [For Students](./for-students) | Step-by-step for beginners |
+| [For Developers](./for-developers) | Quick start for devs |
+| [Architecture](./architecture) | System design |
+| [Amp Tasks Reference](./amp-tasks-reference) | Batch commands |
+| [API Reference](./api-reference) | AMPBridge API |
+| [Component Reference](./06-Component-Reference) | UI components |
+| [User Interface](./07-User-Interface) | UI tech stack |
+| [Security](./security) | Security model |
+| [Workflows](./workflows-deployment) | Deployment guides |
+| [Tunneling](./10-Local-Tunneling) | Tunnel services |
+| [Contributing](./contributing) | Developer guide |
+| [Troubleshooting](./troubleshooting) | Common issues |
+| [Glossary](./glossary) | Terms explained |
 
 ---
 

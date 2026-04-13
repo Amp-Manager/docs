@@ -340,6 +340,6 @@ export function MyComponent({ className, variant = 'primary' }: MyComponentProps
 
 ## See Also
 
-- [Component Reference](./06-Component-Reference.md) - Creating components
-- [State Management](./03-State-Management.md) - Data storage choices
-- [API Reference](./05-API-Reference.md) - Backend services
+- [Component Reference](./06-Component-Reference) - Creating components
+- [State Management](./state-management) - Data storage choices
+- [API Reference](./api-reference) - Backend services

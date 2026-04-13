@@ -158,7 +158,6 @@ import { useDockerMetricsStore } from '@/stores/dockerMetricsStore';
 const { stats, loading, fetchMetrics } = useDockerMetricsStore();
 ```
 
----
 
 ## When to Use Which
 
@@ -180,7 +179,6 @@ Is the data...
 | Modal open/closed | Zustand | UI state |
 | Polling interval | Zustand | Simple preference |
 
----
 
 ## Encryption Overview
 
@@ -194,7 +192,6 @@ Password + Salt -> AES Key (in memory) -> Encrypt/Decrypt -> JSON Files
 - `src/lib/crypto.ts` - Encryption utilities
 - `src/context/AuthContext.tsx` - Key derivation
 
----
 
 ## Key Files Reference
 
@@ -205,7 +202,6 @@ Password + Salt -> AES Key (in memory) -> Encrypt/Decrypt -> JSON Files
 | `src/context/AuthContext.tsx` | User authentication & encryption |
 | `src/stores/*.ts` | Zustand state stores |
 
----
 
 ## Common Patterns
 
@@ -245,9 +241,8 @@ const { user } = useAuth();
 await deleteUserData(user);
 ```
 
----
 
 ## See Also
 
-- [Security Documentation](./08-Security.md) - Data encryption details
-- [Architecture Overview](./03-Architecture.md) - System architecture
+- [Security Documentation](./security) - Data encryption details
+- [Architecture Overview](./architecture) - System architecture

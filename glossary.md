@@ -2,7 +2,6 @@
 
 Terms and concepts used in AMP Manager, explained in plain language.
 
----
 
 ## Core Concepts
 
@@ -12,9 +11,8 @@ A local website address. Like `google.com` on the internet, but `.local` domains
 
 **Example:** `myproject.local`
 
-**Related:** [Create a domain in AMP](./02-For-Students.md#creating-your-first-site)
+**Related:** [Create a domain in AMP](./for-students#creating-your-first-site)
 
----
 
 ### SSL/TLS Certificate
 
@@ -26,7 +24,6 @@ http://mysite.local    ->  Unsecure (red warning)
 https://mysite.local   ->  Secure (green lock)
 ```
 
----
 
 ### Sync
 
@@ -39,9 +36,8 @@ The process AMP runs on every login to verify your environment is working correc
 4. Domains are registered
 5. Database is up to date
 
-**Why it runs every login:** See [Security Design](./08-Security.md)
+**Why it runs every login:** See [Security Design](./security)
 
----
 
 ### Container (Docker)
 
@@ -54,7 +50,6 @@ A lightweight, isolated environment that runs a service (web server, database, e
 | `php_amp` | PHP runtime |
 | `db_amp` | MariaDB database |
 
----
 
 ### CA (Certificate Authority)
 
@@ -62,7 +57,7 @@ A "trusted issuer" that vouches for your SSL certificates. AMP uses `mkcert` to 
 
 **Why needed:** Without a CA, browsers won't trust your local SSL certificates.
 
----
+
 
 ## User-Facing Terms
 
@@ -75,7 +70,6 @@ A visual automation tool that lets you chain commands (Git, SFTP, npm) together.
 - Pull latest changes from Git
 - Sync files via SFTP
 
----
 
 ### Credential
 
@@ -88,7 +82,7 @@ A stored username/password or SSH key for external services.
 
 **Stored:** Encrypted in JSON files (`users/user_{username}/credentials.json`)
 
----
+
 
 ### Note
 
@@ -101,7 +95,7 @@ A text note in AMP, optionally encrypted for sensitive information.
 
 **Stored:** Encrypted in JSON files (`users/user_{username}/notes.json`)
 
----
+
 
 ### Tag
 
@@ -111,7 +105,7 @@ A label you can add to sites, notes, databases for organization.
 
 **Stored:** JSON file (`users/user_{username}/tags.json`)
 
----
+
 
 ## Technical Terms
 
@@ -145,7 +139,7 @@ A state management library for React. Manages UI state that doesn't need to pers
 - UI toggles
 - Polling settings
 
----
+
 
 ### Neutralino.js
 
@@ -156,7 +150,7 @@ The runtime that lets AMP run as a desktop app (instead of just a website).
 - Native Windows support
 - Secure API allowlist
 
----
+
 
 ### amp-tasks.bat
 
@@ -168,7 +162,7 @@ The Windows batch script that handles all backend operations.
 - Handles SSL certificates
 - Manages databases
 
----
+
 
 ### hosts file
 
@@ -181,7 +175,6 @@ A Windows file that maps domain names to IP addresses.
 127.0.0.1    myproject.local
 ```
 
----
 
 ### mkcert
 
@@ -191,7 +184,6 @@ A tool that creates locally-trusted SSL certificates.
 - Create a local Certificate Authority
 - Generate certificates for `.local` domains
 
----
 
 ### Angie
 
@@ -202,7 +194,6 @@ The web server (nginx fork) that serves your local sites.
 - Better performance
 - Active development
 
----
 
 ## Workflow/Deployment Terms
 
@@ -212,7 +203,6 @@ SSH File Transfer Protocol - secure file transfer using SSH keys.
 
 **vs FTP:** SFTP is more secure and uses key-based auth.
 
----
 
 ### SSH Key
 
@@ -221,13 +211,11 @@ A pair of cryptographic keys (public + private) for secure authentication.
 **Public key:** Shared with servers you want to access
 **Private key:** Kept on your machine, never shared
 
----
 
 ### Deploy Key
 
 An SSH key added to a Git repository for read/write access during deployment.
 
----
 
 ### Webhook
 
@@ -235,7 +223,6 @@ An HTTP POST request that triggers an action (like deploying code).
 
 **Use in AMP:** Trigger deployments from external services
 
----
 
 ## Error Terms
 
@@ -248,7 +235,6 @@ User Account Control - Windows security that prompts for admin permission.
 - Install SSL certificates
 - Control Docker
 
----
 
 ### nativeAllowList
 
@@ -256,27 +242,26 @@ A security setting in Neutralino that controls which APIs JavaScript can call.
 
 **Purpose:** If JS is compromised, limits damage by blocking unauthorized system calls
 
----
 
 ## Quick Reference Table
 
 | Term | Simple Definition | Where to Learn |
 |------|-------------------|----------------|
-| Domain | Local website address | [For Students](./02-For-Students.md) |
-| SSL | Secure HTTPS | [For Students](./02-For-Students.md) |
-| Sync | Environment check | [Security Design](./08-Security.md) |
-| Container | Isolated service | [For Students](./02-For-Students.md) |
-| Workflow | Automation tool | [Workflows](./09-Workflows-Deployment.md) |
-| Credential | Saved auth data | [Workflows](./09-Workflows-Deployment.md) |
-| JSON Storage | File-based persistence | [State Management](./03-State-Management.md) |
-| Neutralino | Desktop runtime | [For Developers](./02-For-Developers.md) |
+| Domain | Local website address | [For Students](./for-students) |
+| SSL | Secure HTTPS | [For Students](./for-students) |
+| Sync | Environment check | [Security Design](./security) |
+| Container | Isolated service | [For Students](./for-students) |
+| Workflow | Automation tool | [Workflows](./workflows-deployment) |
+| Credential | Saved auth data | [Workflows](./workflows-deployment) |
+| JSON Storage | File-based persistence | [State Management](./state-management) |
+| Neutralino | Desktop runtime | [For Developers](./for-developers) |
 
 ---
 
 ## See Also
 
-- [For Students](./02-For-Students.md) - Beginner guide
-- [For Developers](./02-For-Developers.md) - Developer guide
-- [Workflows & Deployment](./09-Workflows-Deployment.md) - Deployment workflows
-- [Security Design](./08-Security.md) - Security details
-- [State Management](./03-State-Management.md) - Data storage
+- [For Students](./for-students) - Beginner guide
+- [For Developers](./for-developers) - Developer guide
+- [Workflows & Deployment](./workflows-deployment) - Deployment workflows
+- [Security Design](./security) - Security details
+- [State Management](./state-management) - Data storage

@@ -123,7 +123,7 @@ AMP runs a sync on every login to ensure consistency:
 ```
 
 
-**Why sync runs every login:** See [Security](./security.md)
+**Why sync runs every login:** See [Security](./security)
 
 ### 2. JSON Storage + Encryption
 
@@ -164,7 +164,7 @@ AMP uses a hybrid architecture:
 | Hooks | React hooks | `useProjectSync` |
 | State | Zustand | `useDockerSettings` |
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md) for full patterns.
+See [CONTRIBUTING.md](./CONTRIBUTING) for full patterns.
 
 ---
 
@@ -296,8 +296,8 @@ src/
 
 | Goal | Link |
 |------|------|
-| Full architecture | [Architecture Overview](../architecture) |
-| State management | [State Management](../state-management) |
-| Troubleshooting | [Troubleshooting](../troubleshooting) |
-| Workflows | [Workflows](../workflows) |
-| API Reference | [API Reference](../api-reference) |
+| Full architecture | [Architecture Overview](./architecture) |
+| State management | [State Management](./state-management) |
+| Troubleshooting | [Troubleshooting](./troubleshooting) |
+| Workflows | [Workflows](./workflows-deployment) |
+| API Reference | [API Reference](./api-reference) |

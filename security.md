@@ -278,7 +278,7 @@ This design prioritizes **learning safety** over **performance**, making it idea
 
 ## See Also
 
-- [Architecture Overview](./03-Architecture.md)
-- [AMP Tasks Reference](./04-Amp-Tasks-Reference.md)
-- [State Management](./03-State-Management.md)
-- [Troubleshooting](./12-Troubleshooting.md)
+- [Architecture Overview](./architecture)
+- [AMP Tasks Reference](./amp-tasks-reference)
+- [State Management](./state-management)
+- [Troubleshooting](./troubleshooting)

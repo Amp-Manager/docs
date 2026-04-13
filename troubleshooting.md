@@ -2,7 +2,6 @@
 
 Visual decision trees to help diagnose and fix common issues.
 
----
 
 ## Quick Decision Trees
 
@@ -22,7 +21,6 @@ graph TD
     F -->|Works| H[✅ Ship fix];
 ```
 
----
 
 ### Docker Issues
 
@@ -56,7 +54,6 @@ flowchart TD
     style N fill:#ffecb3
 ```
 
----
 
 ### Domain Not Working
 
@@ -92,7 +89,6 @@ flowchart TD
     style Q fill:#e3f2fd
 ```
 
----
 
 ### Sync Fails
 
@@ -126,7 +122,6 @@ flowchart TD
     style N fill:#c8e6c9
 ```
 
----
 
 ### SSL/Certificate Issues
 
@@ -158,7 +153,6 @@ flowchart TD
     style M fill:#c8e6c9
 ```
 
----
 
 ### Workflow/SFTP Issues
 
@@ -193,7 +187,6 @@ flowchart TD
     style Q fill:#e3f2fd
 ```
 
----
 
 ## Common Error Messages
 
@@ -242,7 +235,6 @@ When creating a new domain, you get:
 
 **Why this happens**: Installing SSL certificates (via mkcert) requires admin privileges. The post-build script applies a UAC manifest that enables this.
 
----
 
 ## Diagnostic Commands
 
@@ -274,7 +266,6 @@ type C:\Windows\System32\drivers\etc\hosts
 caStatus
 ```
 
----
 
 ## Getting Help
 
@@ -282,8 +273,7 @@ If the decision trees don't help:
 
 1. **Check logs**: Open DevTools (F12) -> Console
 2. **Check Docker logs**: `docker logs container_name`
-3. **Search existing issues**: [GitHub Issues](link)
-4. **Ask in community**: [Forum/Discord](link)
+3. **Search existing issues**: [GitHub Issues](https://github.com/Amp-Manager/amp-manager/issues)
 
 ---
 
@@ -296,7 +286,6 @@ If the decision trees don't help:
 | Sync fails | Always run as admin first time |
 | SFTP fails | Test with CLI first |
 
----
 
 ## Docker Issues
 
@@ -316,7 +305,6 @@ If the decision trees don't help:
 
 **Note**: This is a Docker issue, not an AMP issue. AMP correctly reports the problem.
 
----
 
 ### Containers Not Starting
 
@@ -328,7 +316,6 @@ If the decision trees don't help:
 3. Check Docker Desktop logs if containers fail to start
 4. Try restarting Docker Desktop
 
----
 
 ### First-Time Container Setup
 
@@ -352,7 +339,6 @@ If the decision trees don't help:
   ```
 - Then use AMP's "Start All" button for normal operations
 
----
 
 ## Sync Issues
 
@@ -367,7 +353,6 @@ If the decision trees don't help:
 2. Restart Docker if needed
 3. AMP will either complete sync or show error after timeout
 
----
 
 ## SSL/Certificate Issues
 
@@ -381,7 +366,6 @@ If the decision trees don't help:
 3. Wait for regeneration to complete
 4. Refresh dashboard
 
----
 
 ### Certificate Authority Not Working
 
@@ -393,7 +377,6 @@ If the decision trees don't help:
 3. If needed, click "Reset CA" to reinstall the certificate authority
 4. Regenerate SSL certificates
 
----
 
 ## General Tips
 
@@ -402,7 +385,6 @@ If the decision trees don't help:
 - **Check Logs** - AMP logs errors to browser console (F12 -> Console)
 - **AMP is resilient** - Even if sync fails, you can continue using the app
 
----
 
 ## Workflow / SFTP Issues
 
@@ -424,7 +406,6 @@ If the decision trees don't help:
 
 **Alternative**: Use external tools like WinSCP or FileZilla for password-based SFTP transfers.
 
----
 
 ### SFTP Transfer Fails
 
@@ -436,10 +417,9 @@ If the decision trees don't help:
 3. **Check permissions**: Remote directory must be writable by the SSH user
 4. **Test manually**: Run `sftp -i "C:\Users\you\.ssh\id_ed25519" user@host` in terminal to verify
 
----
 
 ## See Also
 
-- [Home](./Home.md) - Overview
-- [For Students](./02-For-Students.md) - Beginner setup
-- [Security Design](./08-Security.md) - Why sync runs every login
+- [Home](./index) - Overview
+- [For Students](./for-students) - Beginner setup
+- [Security Design](./security) - Why sync runs every login

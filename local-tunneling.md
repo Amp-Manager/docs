@@ -2,7 +2,6 @@
 
 Common workflows and feature guides for AMP Manager.
 
----
 
 ## Project Organization with Tags
 
@@ -39,7 +38,6 @@ flowchart LR
 
 Now when you search in the **Command Palette** (Ctrl+K), type "clientA" to see all items related to that project!
 
----
 
 ## How To: Set Up SSL for the First Time
 
@@ -69,7 +67,6 @@ AMP automatically:
 
 **Note:** Accept the security warning on first visit - this is because it's a local CA
 
----
 
 ## How To: Connect to a Database
 
@@ -101,7 +98,6 @@ Your application connects using:
 2. Configure your tool path (e.g., phpMyAdmin, DBeaver)
 3. Or use the built-in connection string
 
----
 
 ## How To: Use Workflows for Deployment
 
@@ -129,7 +125,6 @@ Your application connects using:
    - Remote Path: `/var/www/html`
 3. Click **Save** -> **Run**
 
----
 
 ## How To: Secure Notes with Encryption
 
@@ -147,7 +142,6 @@ Your application connects using:
 - Once unlocked, they're readable like normal notes
 - Close the app or logout to lock them again
 
----
 
 ## How To: Use Command Palette
 
@@ -183,7 +177,6 @@ note:meeting
 cred:production
 ```
 
----
 
 ## How To: Set Up Tunnel Services
 
@@ -240,7 +233,6 @@ When configuring tunnel commands, use these placeholders:
 | `{domain}` | Full local domain | `myproject.local` |
 | `{port}` | Local server port | `8080` |
 
----
 
 ### localhost.run
 
@@ -302,7 +294,6 @@ For dynamic detection:
 
 Most Laravel apps work seamlessly - the tunnel handles the routing correctly.
 
----
 
 ### Serveo
 
@@ -319,7 +310,6 @@ ssh -R {name}:80:{domain}:8080 serveo.net
 - **Cons**: Subdomain may be taken if you want a popular name
 - **Best for**: Named tunnels without any account
 
----
 
 ### Localtonet
 
@@ -365,7 +355,6 @@ Works out of the box. Set your `.env`:
 APP_URL=https://myproject.localto.net
 ```
 
----
 
 ### Setup Steps
 
@@ -408,7 +397,6 @@ ngrok http myproject.local:8080
 - Configure API authentication (token, account)
 - Different setup than SSH-based services
 
----
 
 ## How To: Backup and Restore
 
@@ -430,7 +418,6 @@ ngrok http myproject.local:8080
 
 **Tip:** Export regularly, especially before major changes
 
----
 
 ## How To: Run as Admin (First Time)
 
@@ -453,7 +440,6 @@ AMP modifies system files:
 - Normal running is usually fine
 - Re-run as admin if you see permission errors
 
----
 
 ## Quick Reference
 
@@ -468,11 +454,10 @@ AMP modifies system files:
 | Docker issue | Docker | Start All |
 | Search everything | Command Palette | Ctrl+K |
 
----
 
 ## See Also
 
-- [For Students](./02-For-Students.md) - Complete beginner guide
-- [Workflows & Deployment](./09-Workflows-Deployment.md) - Deployment deep dive
-- [Troubleshooting](./12-Troubleshooting.md) - Common issues
-- [Glossary](./13-Glossary.md) - All terms explained
+- [For Students](./for-students) - Complete beginner guide
+- [Workflows & Deployment](./workflows-deployment) - Deployment deep dive
+- [Troubleshooting](./troubleshooting) - Common issues
+- [Glossary](./glossary) - All terms explained

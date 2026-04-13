@@ -526,6 +526,6 @@ if (isDevMode()) {
 
 ## See Also
 
-- [For Developers](./02-For-Developers.md)
-- [AMP Tasks Reference](./04-Amp-Tasks-Reference.md)
-- [Contributing](./11-Contributing.md)
+- [For Developers](./for-fevelopers)
+- [AMP Tasks Reference](./amp-tasks-reference)
+- [Contributing](./contributing)

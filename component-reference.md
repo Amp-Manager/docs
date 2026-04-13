@@ -456,7 +456,7 @@ npm run lint
 
 ## See Also
 
-- [Contributing](./11-Contributing.md) - Code patterns
-- [API Reference](./05-API-Reference.md) - Full API docs
-- [For Developers](./02-For-Developers.md) - Architecture
-- [State Management](./03-State-Management.md) - State choices
+- [Contributing](./contributing) - Code patterns
+- [API Reference](./api-reference) - Full API docs
+- [For Developers](./for-developers) - Architecture
+- [State Management](./state-management) - State choices
