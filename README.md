@@ -1,0 +1,2 @@
+# docs
+AMP Manager Documentation
