@@ -46,7 +46,7 @@ export default withMermaid({
   themeConfig: {
     logo: {
       // No /docs/ prefix
-      src: '/docs/images/amp-manager-logo-32.png',
+      src: '/images/amp-manager-logo-32.png',
       alt: 'AMP Manager'
     },
     nav: [
