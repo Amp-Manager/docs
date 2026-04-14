@@ -19,12 +19,36 @@ export default withMermaid({
     // lineNumbers: false // whether to show line numbers in mermaid code blocks (default: false)
   },
   head: [
-    ['link', { rel: 'icon', href: '/docs/images/amp-manager-512.png' }],
-    ['meta', { property: 'og:image', content: '/docs/images/amp-manager-512.png' }]
+    // Favicon
+    ['link', { rel: 'icon', href: '/docs/favicon.ico' }],
+    // Meta Description (SEO)
+    ['meta', { name: 'description', content: 'Documentation for AMP Manager - Offline-first, eco-aware development environment for PHP, Node.js, and Python' }],
+    // Meta Keywords (optional, low priority)
+    ['meta', { name: 'keywords', content: 'AMP Manager, documentation, local development, PHP, Node.js, Python, offline-first, eco-aware, sustainable dev' }],
+    
+    // Open Graph / Facebook
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'AMP Manager Docs' }],
+    ['meta', { property: 'og:description', content: 'Documentation for AMP Manager - Offline-first, eco-aware development environment' }],
+    ['meta', { property: 'og:image', content: '/docs/images/amp-manager-512.png' }],
+    ['meta', { property: 'og:url', content: 'https://amp-manager.github.io/docs/' }],
+    
+    // Twitter Card
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: 'AMP Manager Docs' }],
+    ['meta', { name: 'twitter:description', content: 'Documentation for AMP Manager - Offline-first, eco-aware development environment' }],
+    ['meta', { name: 'twitter:image', content: '/docs/images/amp-manager-512.png' }],
+    
+    // Canonical URL (helps SEO)
+    ['link', { rel: 'canonical', href: 'https://amp-manager.github.io/docs/' }]
   ],
   lastUpdated: true,
   themeConfig: {
-    logo: '/docs/images/amp-manager-logo-32.png',
+    logo: {
+      // No /docs/ prefix
+      src: '/docs/images/amp-manager-logo-32.png',
+      alt: 'AMP Manager'
+    },
     nav: [
       { text: 'Guide', link: '/guide' },
       { text: 'Config', link: '/config' },
