@@ -2,7 +2,9 @@
 
 Thank you for your interest in contributing!
 
+
 ## Development Workflow
+
 
 ### 1. Fork & Clone
 
@@ -12,6 +14,7 @@ cd amp-manager
 npm install
 ```
 
+
 ### 2. Create a Feature Branch
 
 ```bash
@@ -19,6 +22,7 @@ git checkout -b feature/your-feature-name
 # or
 git checkout -b fix/your-fix-description
 ```
+
 
 ### 3. Development
 
@@ -33,6 +37,7 @@ npm run build
 npm run lint
 ```
 
+
 ### 4. Commit & Push
 
 ```bash
@@ -41,17 +46,19 @@ git commit -m "feat: add new feature description"
 git push origin feature/your-feature-name
 ```
 
+
 ### 5. Create Pull Request
 
 - Open a PR on GitHub
 - Fill out the PR template
 - Link any related issues
 
----
+
 
 ## Code Architecture Patterns
 
 AMP Manager uses a hybrid architecture that evolved from different developer backgrounds. This section documents the patterns so contributors can maintain consistency.
+
 
 ### Services Layer (OOP Pattern)
 
@@ -66,7 +73,8 @@ class DatabaseService {
 export const databaseService = new DatabaseService();
 ```
 
-**Files using this pattern:**
+**Files using this pattern:**  
+
 - `DatabaseService.ts`
 - `AMPBridge.ts`
 - `TerminalService.ts`
@@ -74,12 +82,14 @@ export const databaseService = new DatabaseService();
 - `BackupService.ts`
 - `AngieStatusService.ts`
 
+
 ### UI Layer (React Patterns)
 
 React components and hooks use standard React patterns:
 - Hooks: `useCamelCase` naming
 - Contexts: `AuthContext`, `SyncContext`
 - State: Zustand stores (`useDockerSettings`)
+
 
 ### Naming Conventions
 
@@ -89,6 +99,7 @@ React components and hooks use standard React patterns:
 | React Hooks | `useCamelCase` | `useProjectSync`, `useAuth` |
 | Zustand stores | `useCamelCase` | `useDockerSettings` |
 | Components | `PascalCase` | `DomainTableView`, `SettingsPanel` |
+
 
 ### Architecture Flow
 
@@ -164,7 +175,6 @@ Three patterns are used across the codebase:
 | `try/catch` + `toast` | UI-friendly errors with user feedback |
 | `useBatchError` hook | Batch operations with error collection |
 
----
 
 ## Code Style
 
@@ -172,33 +182,35 @@ Three patterns are used across the codebase:
 - **ESLint** - Runs via `npm run lint`
 - **Formatting** - Prettier handles formatting automatically
 
+
 ### Commit Message Format
 
-```
+```text
 <type>: <description>
 
 [optional body]
 ```
 
-Types:
+Types:  
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `refactor`: Code refactoring
 - `docs`: Documentation
 - `chore`: Maintenance tasks
 
-Examples:
-```
+Examples:  
+
+```text
 feat: add new tunnel service integration
 fix: resolve domain uppercase handling
 docs: update troubleshooting guide
 ```
 
----
 
 ## Project Structure
 
-```
+```text
 amp-manager/
 |-- src/
 |   |-- components/     # React UI components
@@ -215,11 +227,11 @@ amp-manager/
 +-- neutralino.config.json
 ```
 
----
 
 ## Building the Application
 
 The application requires UAC (User Account Control) elevation to function. Follow these steps to build a production executable:
+
 
 ### Build Steps
 
@@ -238,6 +250,7 @@ The application requires UAC (User Account Control) elevation to function. Follo
 
 > **IMPORTANT**: Step 4 is required! Without running `post-build.bat`, the app runs without admin privileges.
 
+
 ### Why UAC is Required
 
 AMP Manager needs administrator privileges to:
@@ -246,12 +259,13 @@ AMP Manager needs administrator privileges to:
 - Control Docker containers
 - Bind to ports below 1024
 
----
+
 
 ## Testing Your Changes
 
 1. **In Browser**: `npm run dev`
 2. **In Desktop App**: `npm run build`, then run `amp-manager.exe`
+
 
 ### Key Areas to Test
 
@@ -260,7 +274,7 @@ AMP Manager needs administrator privileges to:
 - JSON file persistence
 - Workflow execution
 
----
+
 
 ## Security Considerations
 
@@ -270,7 +284,6 @@ When adding new features:
 2. **New batch command?** -> Add to `AMP_TASKS` whitelist in `public/js/main.js`
 3. **Sensitive data?** -> Use JSON storage with encryption (see `src/lib/db.ts`)
 
----
 
 ## Questions?
 

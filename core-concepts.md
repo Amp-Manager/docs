@@ -28,7 +28,7 @@ graph LR
 | **Neutralino Bridge** | JavaScript middleware exposing `window.AMP` API |
 | **Batch Backend** | Windows batch file for system operations |
 
----
+
 
 ## Entry Point Flow
 
@@ -40,14 +40,16 @@ index.html
 ```
 
 **Key**: `src/main.tsx` detects: 
+
 - Neutralino desktop app (uses filesystem storage)
 - Browser dev server at localhost (uses localStorage fallback)
 
----
+
 
 ## The Bridge Pattern
 
 Communication flows through three coordinated files:
+
 
 ### 1. AMPBridge Service
 
@@ -63,8 +65,10 @@ const result = await ampBridge.version();
 ```
 
 Key lines:
+
 - `src/services/AMPBridge.ts:23-25` - Availability check
 - `src/services/AMPBridge.ts:30-56` - Generic `call()` method
+
 
 ### 2. Neutralino Bridge
 
@@ -76,6 +80,7 @@ Key lines:
 - neutralino `main.js:47-88` - Generic `amp()` executor with JSON parsing
 - neutralino `main.js:91-120` - `window.AMP` API exposure
 
+
 ### 3. Batch Backend
 
 Windows batch file with labeled subroutines. Each task outputs JSON.
@@ -83,14 +88,16 @@ Windows batch file with labeled subroutines. Each task outputs JSON.
 **File**: `amp-tasks.bat`
 
 Key lines:
+
 - `amp-tasks.bat:141-145` - Simple VERSION task example
 - `amp-tasks.bat:30-86` - Task dispatcher (routes to labels)
 
----
+
 
 ## Adding a New Backend Task
 
 To add a new task (e.g., `get_php_version`):
+
 
 ### Step 1: amp-tasks.bat
 
@@ -145,7 +152,7 @@ getPhpVersion: () => Promise<AmpResponse & { php_version: string }>;
 
 **Checklist**: whitelist -> expose -> bridge -> types
 
----
+
 
 ## Data Flow Example: Creating a Domain
 
@@ -176,7 +183,7 @@ Each step:
 5. Batch creates folder, SSL cert, adds hosts entry, generates Angie config
 6. Returns JSON with success/failure for each step
 
----
+
 
 ## Key Directories
 
@@ -191,7 +198,7 @@ Each step:
 | `www/` | Static sites for local domains |
 | `resources/` | Production build output for Neutralino |
 
----
+
 
 ## Next Steps
 

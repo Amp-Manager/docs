@@ -1,8 +1,7 @@
 # Security & Safety Design
 
-AMP Manager is designed for students and junior developers. This document explains why certain safety decisions were made.
+AMP Manager is designed For Users and junior developers. This document explains why certain safety decisions were made.
 
----
 
 ## The Problem
 
@@ -14,7 +13,6 @@ When learning local development, students often:
 
 AMP Manager implements multiple safety layers to prevent these issues.
 
----
 
 ## Sync on Every Login
 
@@ -30,6 +28,7 @@ flowchart TD
     F --> G[Dashboard Ready]
 ```
 
+
 ### Why Not Cache?
 
 caching would be faster, but students wouldn't notice:
@@ -39,7 +38,6 @@ caching would be faster, but students wouldn't notice:
 
 **For learning environments, seeing problems immediately is better than being fast.**
 
----
 
 ## Step-by-Step Safety Features
 
@@ -63,7 +61,6 @@ caching would be faster, but students wouldn't notice:
 
 **Location:** `src/services/ConfigGuardService.ts`
 
----
 
 ### Step 2: Env Status (Docker, Folders)
 
@@ -82,7 +79,6 @@ caching would be faster, but students wouldn't notice:
 - Docker not running -> "Open Docker Desktop to manage your local sites"
 - CA missing -> "Install CA in Settings to enable SSL"
 
----
 
 ### Step 3: CA Status
 
@@ -98,7 +94,6 @@ caching would be faster, but students wouldn't notice:
 - Toast prompts user to install CA in Settings
 - Prevents confusing SSL errors later
 
----
 
 ### Step 4: Scan Domains
 
@@ -112,7 +107,6 @@ caching would be faster, but students wouldn't notice:
 - Shows domain health on dashboard
 - Catches orphaned domains (deleted files but still in hosts)
 
----
 
 ### Step 5: Sync to JSON Files
 
@@ -124,7 +118,6 @@ caching would be faster, but students wouldn't notice:
 - Ensures dashboard shows accurate information
 - Persists across app restarts
 
----
 
 ## Defense in Depth
 
@@ -166,6 +159,7 @@ flowchart TB
 | **AMP_TASKS whitelist** | Only approved commands executable | `public/js/main.js` |
 | **Batch dispatcher** | Controlled command routing | `amp-tasks.bat` |
 
+
 ### Why This Matters
 
 AMP runs with elevated privileges (admin rights from UAC). If JavaScript is compromised (XSS attack), the allowlists prevent the attacker from:
@@ -173,7 +167,6 @@ AMP runs with elevated privileges (admin rights from UAC). If JavaScript is comp
 - Running unauthorized commands
 - Accessing sensitive data
 
----
 
 ## Data Persistence
 
@@ -198,6 +191,7 @@ All user data is stored in the `users/user_{username}/` folder. The `user_` pref
 | `users/user_{username}/site_configs.json` | Config backups | YES |
 | `config.json` | App settings (lastUser only) | No |
 
+
 ### Why JSON Files?
 
 - **Visible** - Students can see their data with any text editor
@@ -221,7 +215,6 @@ All user data is stored in the `users/user_{username}/` folder. The `user_` pref
 | App folder | `AMP-Manager/users/` (Neutralino's app data path) |
 | Neutralino storage | `AMP-Manager/.storage/` (for small settings) |
 
----
 
 ## Backup & Restore
 
@@ -237,7 +230,6 @@ Located in **Docker -> Config Recovery**:
 - **Factory:** Original config files from Step 1
 - **Snapshots:** Manual backups before destructive operations
 
----
 
 ## Complete Data Deletion
 
@@ -260,7 +252,6 @@ AMP Manager provides a complete data wipe function for testing or reset scenario
 
 **Warning:** This action cannot be undone. All user data, domains, credentials, and settings will be permanently deleted.
 
----
 
 ## Summary
 
@@ -272,9 +263,8 @@ AMP Manager provides a complete data wipe function for testing or reset scenario
 | Defense-in-depth | Limits damage from attacks |
 | Per-user JSON | Data isolation |
 
-This design prioritizes **learning safety** over **performance**, making it ideal for students and junior developers.
+This design prioritizes **learning safety** over **performance**, making it ideal For Users and junior developers.
 
----
 
 ## See Also
 

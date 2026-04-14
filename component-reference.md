@@ -370,6 +370,7 @@ async function handleAction() {
 
 AMP uses Tailwind CSS + DaisyUI. Use component classes:
 
+
 ### Common Patterns
 
 ```typescript
@@ -416,12 +417,14 @@ npm run dev
 # Opens at http://localhost:3000
 ```
 
+
 ### Production Build
 
 ```bash
 npm run build
 # Runs type checking and builds to resources/
 ```
+
 
 ### Type Check
 

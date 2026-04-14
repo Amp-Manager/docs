@@ -11,7 +11,7 @@ A local website address. Like `google.com` on the internet, but `.local` domains
 
 **Example:** `myproject.local`
 
-**Related:** [Create a domain in AMP](./for-students#creating-your-first-site)
+**Related:** [Create a domain in AMP](./for-users#creating-your-first-site)
 
 
 ### SSL/TLS Certificate
@@ -19,10 +19,10 @@ A local website address. Like `google.com` on the internet, but `.local` domains
 A security certificate that enables HTTPS (secure connections). It proves your site is legitimate and encrypts data.
 
 **Visual:**
-```
-http://mysite.local    ->  Unsecure (red warning)
-https://mysite.local   ->  Secure (green lock)
-```
+
+http://mysite.local    ->  <Badge type="danger" text="Unsecure" />   
+https://mysite.local   ->  <Badge type="info" text="Secure" /> (lock)
+
 
 
 ### Sync
@@ -58,14 +58,14 @@ A "trusted issuer" that vouches for your SSL certificates. AMP uses `mkcert` to 
 **Why needed:** Without a CA, browsers won't trust your local SSL certificates.
 
 
-
 ## User-Facing Terms
 
 ### Workflow
 
 A visual automation tool that lets you chain commands (Git, SFTP, npm) together.
 
-**Use cases:**
+**Use cases:** 
+
 - Deploy code to a server
 - Pull latest changes from Git
 - Sync files via SFTP
@@ -75,7 +75,8 @@ A visual automation tool that lets you chain commands (Git, SFTP, npm) together.
 
 A stored username/password or SSH key for external services.
 
-**Types:**
+**Types:** 
+
 - SSH Keys (for SFTP, Git)
 - API Keys
 - Database passwords
@@ -101,7 +102,7 @@ A text note in AMP, optionally encrypted for sensitive information.
 
 A label you can add to sites, notes, databases for organization.
 
-**Example:** `["portfolio", "client-work", "testing"]`
+**Example:** <Badge type="danger" text="development" />  <Badge type="tip" text="testing" />  <Badge type="info" text="production" />
 
 **Stored:** JSON file (`users/user_{username}/tags.json`)
 
@@ -129,6 +130,7 @@ AMP Manager's primary storage system using JSON files in the `users/user_{userna
 | `tunnels.json` | Active tunnels | No |
 | `databases.json` | Database metadata | No |
 | `databases_cache.json` | Database cache | No |
+
 
 ### Zustand
 
@@ -247,10 +249,10 @@ A security setting in Neutralino that controls which APIs JavaScript can call.
 
 | Term | Simple Definition | Where to Learn |
 |------|-------------------|----------------|
-| Domain | Local website address | [For Students](./for-students) |
-| SSL | Secure HTTPS | [For Students](./for-students) |
+| Domain | Local website address | [For Users](./for-users) |
+| SSL | Secure HTTPS | [For Users](./for-users) |
 | Sync | Environment check | [Security Design](./security) |
-| Container | Isolated service | [For Students](./for-students) |
+| Container | Isolated service | [For Users](./for-users) |
 | Workflow | Automation tool | [Workflows](./workflows-deployment) |
 | Credential | Saved auth data | [Workflows](./workflows-deployment) |
 | JSON Storage | File-based persistence | [State Management](./state-management) |
@@ -260,7 +262,7 @@ A security setting in Neutralino that controls which APIs JavaScript can call.
 
 ## See Also
 
-- [For Students](./for-students) - Beginner guide
+- [For Users](./for-users) - Beginner guide
 - [For Developers](./for-developers) - Developer guide
 - [Workflows & Deployment](./workflows-deployment) - Deployment workflows
 - [Security Design](./security) - Security details

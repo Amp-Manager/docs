@@ -4,8 +4,6 @@ export default withMermaid({
   title: "AMP Manager Docs",
   description: "Documentation for AMP Manager",
   base: "/docs/",
-  // head property to inject scripts
-
   // Optional: Configure Mermaid.js options directly
   mermaid: {
     // Refer to https://mermaid.js.org/config/setup/modules/mermaidAPI.html#mermaidapi-configuration-defaults
@@ -18,6 +16,7 @@ export default withMermaid({
     // class: "mermaid my-class", // set additional css classes for parent container
     // lineNumbers: false // whether to show line numbers in mermaid code blocks (default: false)
   },
+  // head property to inject scripts
   head: [
     // Favicon
     ['link', { rel: 'icon', href: '/docs/favicon.ico' }],
@@ -45,14 +44,17 @@ export default withMermaid({
   lastUpdated: true,
   themeConfig: {
     logo: {
-      // No /docs/ prefix
+      // No prefix '/docs/'
       src: '/images/amp-manager-logo-32.png',
       alt: 'AMP Manager'
     },
+    search: {
+      provider: 'local'
+    },
     nav: [
-      { text: 'Guide', link: '/guide' },
+      { text: 'GitHub', link: 'https://github.com/Amp-Manager' },
       { text: 'Config', link: '/config' },
-      { text: 'Changelog', link: 'https://github.com/...' }
+      { text: 'Changelog', link: 'https://github.com/Amp-Manager/amp-manager/CHANGELOG.md' }
     ],
     editLink: {
       pattern: "https://github.com/amp-manager/docs/edit/main/:path",
@@ -65,7 +67,7 @@ export default withMermaid({
         collapsed: true,
         items: [
           { text: 'Introduction', link: '/introduction' }, // Assuming docs/introduction.md
-          { text: 'For Students', link: '/for-students' },
+          { text: 'For Users', link: '/for-users' },
           { text: 'For Developers', link: '/for-developers' }
         ]
       },
@@ -112,6 +114,7 @@ export default withMermaid({
         text: 'Help & Contribution',
         collapsed: true,
         items: [
+          { text: 'How To', link: '/how-to' },
           { text: 'Contributing', link: '/contributing' },
           { text: 'Troubleshooting Guide', link: '/troubleshooting' },
           { text: 'Glossary', link: '/glossary' }

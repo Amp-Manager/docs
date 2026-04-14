@@ -1,7 +1,6 @@
-# AMP Manager for Students
+# AMP Manager For Users
 
 Welcome! This guide walks you through AMP Manager from scratch. No prior experience with Docker or local servers needed.
-
 
 
 ## What You'll Build
@@ -12,7 +11,6 @@ By the end of this guide, you'll have:
 - Automatic HTTPS/SSL for your sites
 - A dashboard to manage multiple projects
 - Encrypted storage for your credentials
-
 
 
 ## Prerequisites
@@ -33,24 +31,31 @@ Docker runs the web servers for your local sites.
 - Wait for the whale icon in your system tray to show "Running"
 - This may take 2-5 minutes on first install
 
-> **Tip:** If you see an error about WSL2, download the [WSL2 update package](https://aka.ms/wsl2kernel) from Microsoft and install it, then restart Docker.
+<Badge type="info" text="WSL2" />
+
+> If you see an error about WSL2, download the [WSL2 update package](https://aka.ms/wsl2kernel) from Microsoft and install it, then restart Docker.
 
 
-### 2. AMP Manager
+## Understanding the Dashboard
 
-```bash
-# Clone the repository
-git clone https://github.com/Amp-Manager/amp-manager.git
-cd amp-manager
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/screenshots/amp-manager-desktop-prototype.jpg" width="100%" height="auto" />
+</p>
 
-# Install dependencies
-npm install
 
-# Start the app
-npm run dev
-```
 
-The app will open at `http://localhost:3000`.
+| Top Section | What It Means |
+|------|-------------|
+| Titlebar Docker | [Running] Green = containers running, [Stopped] orange = containers stopped, [Off] Red = Docker not running |
+| Titlebar New Domain | Opens a modal to create a new domain |
+| Titlebar Search | Opens a palette to search and filter projects tags |
+| Domains | Local sites you've created, all projects found in AMP Manager |
+| Workflows | Number of remote saved tasks |
+| Certificates | SSL certificates signed by your Certificate Authority |
+| Databases | MySQL/MariaDB databases you can use |
+| Notes | Notes created for domains, and encrypted notes |
+| Credentials | Encrypted authentication of remote servers |
+| Clear Cache & Logs | Delete files genrated by Angie web server |
 
 
 ## Your First Sync
@@ -66,11 +71,11 @@ flowchart LR
     C --> D[Scan Domains]
     D --> E[Save to Database]
     
-    style A fill:#2196f3
-    style B fill:#e3f2fd
-    style C fill:#e3f2fd
-    style D fill:#e3f2fd
-    style E fill:#e3f2fd
+    style A fill:#3949ab
+    style B fill:#4050ab
+    style C fill:#4151ab
+    style D fill:#4252ab
+    style E fill:#4353ab
 ```
 
 **Don't worry if it takes 30-60 seconds** - it's checking everything is working correctly.
@@ -108,34 +113,17 @@ Behind the scenes, AMP:
 
 > **Note:** The "s" in https is important! SSL is automatic.
 
----
-
-## Understanding the Dashboard
-
-```
-+-DC-+-------------------- DASHBOARD --------------------+-DC-+
-||                                                        ||
-||  [OK] Docker    ||  [OK] SSL       ||  System OK      ||
-||  ------+-------||------+----       ||  --------+-----  ||
-||        ||      ||      |            ||          |        ||
-||  [OK] 3 Sites    ||  [OK] 2 Databases  ||  Your Data   ||
-||  ------+-------||------+----       ||  --------+-----  ||
-||        ||      ||      |            ||          |        ||
-+------------------------------------------------------------+
-```
-
-| Card | What It Means |
-|------|-------------|
-| Docker | [OK] Green = containers running, [FAIL] Red = Docker stopped |
-| SSL | [OK] Green = certificates valid |
-| Sites | Number of local domains you've created |
-| Databases | MySQL/MariaDB databases you can use |
-
-
 
 ## Common Issues
 
-### "Docker Running: FAIL"
+## Activity Timeline & System Checks
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/screenshots/amp-manager-desktop-prototype-activity.jpg" width="100%" height="auto" />
+</p>
+
+### Docker Running: FAIL
+
 
 ```mermaid
 flowchart TD
@@ -156,9 +144,9 @@ flowchart TD
 ### "SSL: FAIL"
 
 1. Go to **Settings** -> **Certificates**
-2. Click **Regenerate All SSL**
-3. Wait 60 seconds
-4. Refresh the page
+2. Click **Regenerate SSL**
+3. Wait 10 seconds
+4. Restart Angie web server
 
 
 ### Site Not Loading
@@ -166,6 +154,7 @@ flowchart TD
 1. Check the URL has `https://` (not `http://`)
 2. Try clicking **Sync** in the top bar
 3. Check Docker is running (green on dashboard)
+4. Restart Docker containers
 
 
 

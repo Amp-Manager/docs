@@ -421,5 +421,5 @@ If the decision trees don't help:
 ## See Also
 
 - [Home](./index) - Overview
-- [For Students](./for-students) - Beginner setup
+- [For Users](./for-users) - Beginner setup
 - [Security Design](./security) - Why sync runs every login

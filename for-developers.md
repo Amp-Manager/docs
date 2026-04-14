@@ -166,7 +166,6 @@ AMP uses a hybrid architecture:
 
 See [Contributing](./contributing) for full patterns.
 
----
 
 ## Common Development Tasks
 
@@ -199,7 +198,8 @@ In `neutralino.config.json`, add required APIs.
 
 ### Adding a New Page
 
-**1. Create the component:**
+**1. Create the component:**  
+
 ```typescript
 // src/pages/MyNewPage.tsx
 export function MyNewPage() {
@@ -207,7 +207,8 @@ export function MyNewPage() {
 }
 ```
 
-**2. Add the route:**
+**2. Add the route:**  
+
 ```typescript
 // src/App.tsx
 import { MyNewPage } from './pages/MyNewPage';
@@ -230,7 +231,6 @@ function MyComponent() {
 }
 ```
 
----
 
 ## Debugging Tips
 
@@ -239,6 +239,7 @@ function MyComponent() {
 - Open DevTools (F12)
 - Check Console for errors
 - Filter by "AMP" or your feature
+
 
 ### Backend Logs
 
@@ -255,24 +256,24 @@ docker logs angie_amp
 docker logs db_amp
 ```
 
----
 
 ## Testing Checklist
 
 Before submitting a PR:
 
-- [ ] `npm run lint` passes
-- [ ] `npm run build` succeeds
-- [ ] New feature works in browser (`npm run dev`)
-- [ ] New feature works in desktop app
-- [ ] Error states handled gracefully
-- [ ] No console.log statements
+```text
+[ ] `npm run lint` passes  
+[ ] `npm run build` succeeds  
+[ ] New feature works in browser (`npm run dev`)  
+[ ] New feature works in desktop app  
+[ ] Error states handled gracefully  
+[ ] No console.log statements  
+```
 
----
 
 ## File Organization
 
-```
+```text
 src/
 |-- components/       # Reusable UI components
 |   |-- layout/       # Layout (Sidebar, Layout)
@@ -290,7 +291,6 @@ src/
 |-- types/           # TypeScript definitions
 ```
 
----
 
 ## What's Next?
 

@@ -1,17 +1,188 @@
-# Local Tunneling
+# How To
 
-**Share your local development site with anyone, anywhere.**
+Common workflows and feature guides for AMP Manager.
 
-Local tunneling creates a secure bridge between your computer and the internet. Instead of deploying to a staging server, you can instantly share your `localhost` site with clients, teammates, or testers.
 
-## Why use tunnels?
+## Project Organization with Tags
 
-- 🚀 **Quick demos** — Show clients your work without deploying
-- 🧪 **Test webhooks** — Receive payments, emails, or API callbacks on localhost
-- 👥 **Remote testing** — Let teammates view your site from their devices
-- 🔒 **Secure access** — Encrypted connections with optional password protection
+Use tags to group related items across AMP. Tag your domain, database, notes, credentials, and workflows with the same label for easy filtering.
 
-**Alternatives to ngrok, localtunnel, and similar tunnel services.**
+### Example: "clientA" Project
+
+```mermaid
+flowchart LR
+    subgraph ClientA["Project: clientA"]
+        D1[Domain: clientA.local]
+        DB[Database: clientA_db]
+        N[Note: Project specs]
+        C[Credential: SSH key]
+        W[Workflow: Deploy]
+    end
+    
+    T[Tag: clientA] -.-> D1
+    T -.-> DB
+    T -.-> N
+    T -.-> C
+    T -.-> W
+    
+    style T fill:#ffd54f,stroke:#ff6f00
+```
+
+### How to Use Tags
+
+1. **Create a domain** -> Add tag "clientA"
+2. **Create a database** -> Add tag "clientA"  
+3. **Add notes** -> Add tag "clientA"
+4. **Save credentials** -> Add tag "clientA"
+5. **Build workflows** -> Add tag "clientA"
+
+Now when you search in the **Command Palette** (Ctrl+K), type "clientA" to see all items related to that project!
+
+
+## Set Up SSL for the First Time
+
+### Step 1: Create Root CA
+
+1. Go to **Settings** -> **Certificates**
+2. Click **Create Root CA** (if not exists)
+3. Accept the Windows security prompt
+
+
+### Step 2: Create Your First Domain
+
+1. Go to **Domains**
+2. Click **+ Add Domain**
+3. Enter: `myproject`
+4. Click **Create**
+
+AMP automatically:
+- Creates folder at `C:\amp\www\myproject`
+- Adds to Windows hosts file
+- Generates SSL certificate
+
+### Step 3: Verify SSL Works
+
+1. Open browser
+2. Go to `https://myproject.local`
+3. You should see a welcome page (or blank if empty)
+
+**Note:** Accept the security warning on first visit - this is because it's a local CA
+
+
+## Connect to a Database
+
+### Step 1: Create Database
+
+1. Go to **Databases**
+2. Click **+ Add Database**
+3. Enter:
+   - **Name**: `myapp`
+   - **Username**: `admin`
+   - **Password**: `secretpassword`
+4. Click **Create**
+
+
+### Step 2: Connect from Application
+
+Your application connects using:
+
+| Setting | Value |
+|---------|-------|
+| Host | `localhost` |
+| Port | `3306` |
+| Database | `myapp` |
+| Username | `admin` |
+| Password | `secretpassword` |
+
+
+### Step 3: Connect with External Tool
+
+1. Go to **Settings** -> **Database Tool**
+2. Configure your tool path (e.g., phpMyAdmin, DBeaver)
+3. Or use the built-in connection string
+
+
+## Use Workflows for Deployment
+
+### Simple Deploy Workflow
+
+1. Go to **Workflows**
+2. Click **+ New Workflow**
+3. Add a **Source Node** (your local domain)
+4. Add an **Action Node**:
+   - Type: `shell`
+   - Command: `git pull origin main`
+5. Add a **Target Node**:
+   - Type: `local`
+   - Domain: (select your domain)
+6. Click **Save** -> **Run**
+
+
+### SFTP Deploy Workflow
+
+1. Add **Source Node** (local domain)
+2. Add **Action Node**:
+   - Type: `sftp_sync`
+   - Host: `your-server.com`
+   - Username: `root`
+   - Credential: (select your SSH key)
+   - Remote Path: `/var/www/html`
+3. Click **Save** -> **Run**
+
+
+## Secure Notes with Encryption
+
+### Step 1: Create an Encrypted Note
+
+1. Go to **Notes**
+2. Click **+ New Note**
+3. Toggle **Encrypt** to ON
+4. Enter your note content
+5. Click **Save**
+
+### Step 2: Access Encrypted Notes
+
+- Encrypted notes require your password to be entered at login
+- Once unlocked, they're readable like normal notes
+- Close the app or logout to lock them again
+
+
+## Use Command Palette
+
+The Command Palette (Ctrl+K) lets you quickly search and navigate.
+
+
+### Search by Tag
+
+1. Press **Ctrl+K**
+2. Type a tag name (e.g., "clientA")
+3. See all items with that tag
+
+
+### Quick Actions
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+K` | Open Command Palette |
+| `Ctrl+S` | Save (in forms) |
+| `Ctrl+Shift+P` | Run workflow |
+
+
+### Search Examples
+
+```
+# Find all items
+clientA
+
+# Find domains only
+domain:clientA
+
+# Find notes only  
+note:meeting
+
+# Find credentials
+cred:production
+```
 
 
 ## Set Up Tunnel Services
@@ -178,7 +349,7 @@ ssh -p 223 -R {name}:80:{domain}:8080 YOUR_TOKEN@localto.net
 **Reference:** See [Localtonet Zero-Install SSH Docs](https://localtonet.com/documents/zero-install-ssh) for more details.
 
 
-#### WordPress
+#### Tunneling WordPress
 
 Same configuration as localhost.run - add to `wp-config.php`:
 
@@ -191,7 +362,7 @@ define('WP_SITEURL', $scheme . '://' . $_SERVER['HTTP_HOST']);
 **Advantage over localhost.run:** Localtonet persistent URLs don't change, so WordPress URL updates are one-time only.
 
 
-#### Laravel
+#### Tunneling Laravel
 
 Works out of the box. Set your `.env`:
 
@@ -241,6 +412,64 @@ ngrok http myproject.local:8080
 - Download their CLI binary (place in PATH or `/bin`)
 - Configure API authentication (token, account)
 - Different setup than SSH-based services
+
+
+## How To: Backup and Restore
+
+### Export Data
+
+1. Go to **Settings** -> **Backup & Restore**
+2. Click **Export Data**
+3. Choose what to include:
+   - Sites, notes, credentials, workflows, tags
+   - Include sensitive data (encrypted)
+4. Save the backup file
+
+
+### Import Data
+
+1. Click **Import Data**
+2. Select backup file
+3. Choose overwrite or merge
+4. Import completes
+
+**Tip:** Export regularly, especially before major changes
+
+
+## How To: Run as Admin (First Time)
+
+### Why Admin is Needed
+
+AMP modifies system files:
+- Windows hosts file
+- SSL certificates
+- Docker control
+
+### First Time Setup
+
+1. Right-click `amp-manager.exe`
+2. Select **Run as administrator**
+3. Accept UAC prompt
+4. Continue normally
+
+### After First Run
+
+- Normal running is usually fine
+- Re-run as admin if you see permission errors
+
+
+## Quick Reference
+
+| Goal | Where | Steps |
+|------|-------|-------|
+| Create site | Domains | + Add Domain |
+| Create database | Databases | + Add Database |
+| Add note | Notes | + New Note |
+| Save credential | Credentials | + Add Credential |
+| Deploy code | Workflows | New -> Run |
+| SSL issue | Settings -> Certificates | Regenerate |
+| Docker issue | Docker | Start All |
+| Search everything | Command Palette | Ctrl+K |
 
 
 ## See Also

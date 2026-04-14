@@ -1,0 +1,161 @@
+/* AMP Manager Branding */
+:root {
+  color-scheme: light dark;
+
+  /* Primary brand color */
+  --vp-c-brand: #0066cc;
+  --vp-c-brand-dark: #004d99;
+  --vp-c-brand-light: #3399ff;
+  
+  /* Badge info */
+  --vp-badge-info-border: transparent;
+  --vp-badge-info-text: oklch(65% 0.16 145);
+  --vp-badge-info-bg:  oklch(28% 0.08 145);
+}
+
+/* Dark mode adjustments (if needed) */
+.dark {
+color-scheme: dark;
+
+  --color-base-100: oklch(27% 0.020 227);
+  --color-base-200: oklch(22% 0.020 227);
+  --color-base-300: oklch(19% 0.020 227);
+
+/* Transparent variants for hover, overlay, etc. */
+  --brand-80: oklch(20% 0.025 227 / 0.8);
+  --brand-60: oklch(20% 0.025 227 / 0.6);
+  --brand-40: oklch(20% 0.025 227 / 0.4);
+  
+  /* Or use color-mix for dynamic control */
+  --vp-c-brand-overlay: color-mix(in oklch, var(--brand-80) 40%, transparent);
+
+  /* Logo */
+  --vp-nav-logo-height: 32px;
+
+  /* Backgrounds */
+  --vp-backdrop-bg-color: var(--color-base-200);
+  --vp-c-bg: color-mix(in oklch, var(--brand-80) 80%, transparent);
+  --vp-c-bg-soft: color-mix(in oklch, var(--brand-60) 60%, transparent);
+  --vp-c-bg-alt: var(--color-base-200); /* #1a1a1a; */
+  
+ 
+  /* Text */
+  --vp-c-text-1: #ffffff;
+  --vp-c-text-2: #b0b0b0;
+  
+  /* Borders */
+  --vp-c-divider: var(--color-base-100); /* #333333; */
+  
+  /* Code blocks */
+  --vp-code-block-bg: var(--color-base-300); /* #1e1e1e; */
+  --vp-code-color: #d4d4d4;
+  
+  /* Sidebar */
+  --vp-sidebar-bg-color: var(--brand-40);
+  --vp-c-border: var(--color-base-100);
+
+  /* Home title */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, rgb(3, 169, 244), rgb(37, 96, 255));
+    
+  --glow-x: 100%;
+  --glow-y: 100%;
+  --vp-home-hero-image-background-image: radial-gradient(
+    circle at var(--glow-x) var(--glow-y), 
+    /* Mix 30% of color with transparent */ 
+    color-mix(in srgb, #303f9fbe, #303f9f 40%) 0%, 
+    /* Mix 10% of base-content with transparent */ 
+    color-mix(in srgb, rgb(48 63 159), #2560ff 90%) 50%, #099ef6 70%);
+
+}
+
+.VPHomeHero,
+.bg-dots {
+  --dot-bg: var(--color-base-200);
+  --dot-color: rgb(37, 96, 255);
+  --dot-size: 1px;
+  --dot-space: 6px;
+	background:
+		linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+		linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+		var(--dot-color);
+}
+.VPHomeHero .image-container {
+    --glow-x: 55%;
+    --glow-y: 55%;
+  background: radial-gradient(
+    circle at var(--glow-x) var(--glow-y),
+    /* Mix 30% of color with transparent */
+    color-mix(in srgb, #2560ff, transparent 50%) 0%,
+    /* Mix 10% of base-content with transparent */
+    color-mix(in srgb, #303f9f, transparent 90%) 40%,
+    transparent 60%
+  );
+  /* border: 2px solid #2560ff50; */
+  border-radius: 50% 50% 25% 25%;
+    /* background-size: 335px 400px; */
+    /* background-position: -25% -50%; */
+
+}
+.VPHomeHero .image-bg {
+  width: 400px;
+  height: 400px;
+  /* background-overflow: visible;
+  background-position: -100px top; */
+  transform: translate(-70%, -70%);
+}
+.VPFeatures {
+    margin-top: 48px;
+}
+
+.dark body {
+  background: var(--color-base-200);
+}
+
+.dark .VPFeature {
+    background: var(--brand-80);
+    border: 1px solid var(--color-base-100);
+    box-shadow: 1px 2px 4px 0px var(--color-base-300);
+}
+/* header nav, sidebar, right nav */
+.dark .VPNav, .dark .VPLocalNav {
+  background: color-mix(in oklch, var(--brand-80) 40%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+.dark .VPNavBar:not(.home.top) .content-body {
+  background:inherit;
+}
+.dark .VPSidebar {
+  background: #1115;
+}
+/* header nav and sidebar */
+.VPNav,
+.VPSidebar {
+    background-color: var(--vp-sidebar-bg-color);
+}
+.aside-curtain {
+  background: none;
+}
+/* Table */
+.vp-doc table {
+    box-shadow: 0px 2px 6px 0px var(--color-base-100);
+    display: table;
+    margin: 1rem auto;
+    width: 100%
+}
+.dark .vp-doc tr {
+    /* background-color: var(--brand-80); */
+    border-top: 1px solid var(--vp-c-divider);
+    transition: background-color 0.5s;
+}
+table, th, td {
+    font-size: 13px !important;
+}
+
+img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    background: var(--vp-sidebar-bg-color);
+    padding: 8px;
+    border-radius: 8px;
+}

@@ -7,6 +7,7 @@ Complete reference for the AMPBridge service and backend communication.
 
 Central hub for all communication with the Neutralino.js backend.
 
+
 ### Import
 
 ```typescript
@@ -27,7 +28,7 @@ const bridge = ampBridge;
 
 Get AMP Manager version info.
 
-**Returns:**  
+**Returns:**   
 
 ```typescript
 {
@@ -38,7 +39,7 @@ Get AMP Manager version info.
 }
 ```
 
-**Example:**  
+**Example:**   
 
 ```typescript
 const info = await ampBridge.version();
@@ -67,7 +68,7 @@ Get runtime status including Docker containers.
 
 Verify environment and get project root.
 
-**Returns:**  
+**Returns:**   
 
 ```typescript
 {
@@ -77,7 +78,7 @@ Verify environment and get project root.
 }
 ```
 
-**Example:**  
+**Example:**   
 
 ```typescript
 const env = await ampBridge.envCheck();
@@ -119,7 +120,7 @@ List all configured domains.
 
 Create a new local domain.
 
-**Parameters:**  
+**Parameters:**   
 
 | Name | Type | Description |
 |------|------|-------------|
@@ -128,7 +129,7 @@ Create a new local domain.
 
 **Returns:** `AmpResponse`
 
-**Example:**  
+**Example:**   
 
 ```typescript
 const result = await ampBridge.createDomain('myproject', { scaffold: true });
@@ -140,7 +141,7 @@ const result = await ampBridge.createDomain('myproject', { scaffold: true });
 
 Remove a domain.
 
-**Parameters:**  
+**Parameters:**   
 
 | Name | Type | Description |
 |------|------|-------------|
@@ -153,7 +154,8 @@ Remove a domain.
 
 Regenerate domain configuration.
 
-**Parameters:**
+**Parameters:**   
+
 | Name | Type | Description |
 |------|------|-------------|
 | `domain` | `string` | Domain name |
@@ -167,14 +169,15 @@ Regenerate domain configuration.
 
 Execute database query via amp-tasks.bat.
 
-**Parameters:**
+**Parameters:**   
+
 | Name | Type | Description |
 |------|------|-------------|
 | `query` | `string` | Query string (e.g., "LIST", "createDB") |
 
 **Returns:** `AmpResponse`
 
-**Example:**  
+**Example:**   
 
 ```typescript
 // List databases
@@ -215,7 +218,7 @@ Uninstall CA certificate.
 
 Regenerate SSL for a domain.
 
-**Parameters:**  
+**Parameters:**   
 
 | Name | Type | Description |
 |------|------|-------------|
@@ -237,7 +240,7 @@ Regenerate SSL for all domains.
 
 Check SSH key status.
 
-**Returns:**
+**Returns:**   
 
 ```typescript
 AmpResponse & {
@@ -253,12 +256,13 @@ AmpResponse & {
 
 Generate new SSH key pair.
 
-**Parameters:**
+**Parameters:**    
+
 | Name | Type | Description |
 |------|------|-------------|
 | `username` | `string` | Username for key comment |
 
-**Returns:**
+**Returns:**   
 
 ```typescript
 AmpResponse & {
@@ -407,6 +411,7 @@ await databaseService.launchTool('https://localhost:8080', 'url');
 
 ## Type Definitions
 
+
 ### AmpResponse
 
 ```typescript
@@ -418,6 +423,7 @@ interface AmpResponse {
 }
 ```
 
+
 ### DockerStat
 
 ```typescript
@@ -428,6 +434,7 @@ interface DockerStat {
   status: string;
 }
 ```
+
 
 ### DockerDisk
 
@@ -451,6 +458,7 @@ if (ampBridge.isAvailable()) {
 }
 ```
 
+
 ### Running a Workflow Command
 
 ```typescript
@@ -471,6 +479,7 @@ const content = await ampBridge.fs.readTextFile('C:\\amp\\config\\app.conf');
 
 AMP Manager includes safeguards against NeutralinoJS idle freezes:
 
+
 ### `startKeepalive(interval?)`
 
 Starts a heartbeat to prevent the app from hanging during idle periods.
@@ -482,6 +491,7 @@ import { startKeepalive } from '@/services/AMPBridge';
 startKeepalive(60000);
 ```
 
+
 ### `execWithTimeout(command, timeout?)`
 
 Execute commands with automatic timeout to prevent hangs.
@@ -492,6 +502,7 @@ import { execWithTimeout } from '@/services/AMPBridge';
 // Execute with 30 second timeout
 const result = await execWithTimeout('docker ps', 30000);
 ```
+
 
 ### `isDevMode()`
 

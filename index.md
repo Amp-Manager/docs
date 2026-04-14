@@ -7,14 +7,14 @@ layout: home
 hero:
   name: AMP Manager
   text: Local Web Development, Simplified.
-  tagline: Docker-based stack with a click-and-run GUI. No terminal required.
+  tagline: Docker-based stack with a click-and-run GUI. Extendable and Open Source.
   image:
     src: /images/amp-manager-512.png # Path to your logo (e.g., in docs/public folder)
     alt: AMP Manager Logo
   actions: # Buttons in the hero section
     - theme: brand # 'brand' or 'alt'
-      text: Get Started for Students
-      link: /for-students # Link to your student guide
+      text: Get Started For Users
+      link: /for-users # Link to your student guide
     - theme: alt
       text: For Developers
       link: /for-developers # Link to your developer guide
@@ -24,7 +24,7 @@ features:
   - icon: ⚡
     title: Quick Setup
     details: Get a full local web development environment running in minutes, no Docker experience needed.
-    link: /for-students # Link to a relevant page
+    link: /for-users # Link to a relevant page
     linkText: Learn More
   - icon: 🔒
     title: Automatic HTTPS/SSL
@@ -58,7 +58,7 @@ features:
     linkText: Build Workflows
   - icon: 📦 
     title: Extendable & Open Source
-    details: Designed for contributors, with a clear architecture and stability patterns for Neutralino.js.
+    details: Designed for contributors, with a clear architecture and stability patterns for Neutralino.js
     link: /contributing # Link to contributing guide
     linkText: Contribute
 ---

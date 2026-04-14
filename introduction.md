@@ -1,8 +1,8 @@
 # AMP Manager
 
-Desktop app for local development. Docker-based stack with a click-and-run GUI. No terminal required.
+Desktop app for local development. Docker-based stack with a click-and-run GUI.   
+No terminal required. Extendable and Open Source.
 
----
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/screenshots/amp-manager-desktop-prototype.jpg" width="100%" height="auto" />
@@ -18,24 +18,16 @@ AMP Manager provides a unified interface for:
 - Visual workflow automation
 - Tunnel services integration (share local projects)
 
-## Activity Timeline
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/screenshots/amp-manager-desktop-prototype-activity.jpg" width="100%" height="auto" />
-</p>
-
-## Docker Management
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/screenshots/amp-manager-desktop-prototype-docker.jpg" width="100%" height="auto" />
-</p>
 
 ## First Run Setup
 
 1. **Install Docker Desktop** - Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 2. **Install AMP Manager** - Download a release or clone to your drive
 
-> **IMPORTANT**: After running `npm run build:app`, you MUST run `post-build.bat` to apply the UAC manifest. Without this, the app runs without admin privileges and cannot install SSL certificates or modify the hosts file.
+<Badge type="warning" text="IMPORTANT" />
+
+> After running `npm run build:app`, you MUST run `post-build.bat` to apply the UAC manifest. Without this, the app runs without admin privileges and cannot install SSL certificates or modify the hosts file.
+
 
 ### Run Docker and Amp Manager
 
@@ -46,9 +38,10 @@ AMP Manager provides a unified interface for:
    ```
 3. **Launch AMP Manager** - The dashboard will show all systems as "Healthy"
 
-> **Note:** Docker must be running whenever you use AMP Manager. The Dashboard's System Checks section displays the current status. You can also use AMP Manager to launch and control Docker.
+<Badge type="info" text="System Checks" />
 
----
+> Docker must be running whenever you use AMP Manager. The Dashboard's System Checks section displays the current status. You can also use AMP Manager to launch and control Docker.
+
 
 ## Tech Stack
 
@@ -64,7 +57,7 @@ AMP Manager provides a unified interface for:
 | Document | Description |
 |----------|-------------|
 | [Core Concepts](./core-concepts) | How AMP works |
-| [For Students](./for-students) | Step-by-step for beginners |
+| [For Users](./for-users) | Step-by-step for beginners |
 | [For Developers](./for-developers) | Quick start for devs |
 | [Architecture](./architecture) | System design |
 | [Amp Tasks Reference](./amp-tasks-reference) | Batch commands |
@@ -78,7 +71,7 @@ AMP Manager provides a unified interface for:
 | [Troubleshooting](./troubleshooting) | Common issues |
 | [Glossary](./glossary) | Terms explained |
 
----
+
 
 ## Quick Start
 
@@ -105,7 +98,7 @@ AMP Manager provides a unified interface for:
 
 Your domain is now available at `http://mysite.local` with automatic SSL!
 
----
+
 
 ## Key Concepts
 
@@ -128,14 +121,14 @@ Docker containers managed by AMP:
 
 Sensitive data (credentials, notes, settings, workflows, site configs) is encrypted using AES-256-GCM with keys derived from your password.
 
----
+
 
 ## Support
 
 - Issues: [GitHub Issues](https://github.com/amp-manager/amp-manager/issues)
 - Discussions: [GitHub Discussions](https://github.com/amp-manager/amp-manager/discussions)
 
----
+
 
 ## License
 

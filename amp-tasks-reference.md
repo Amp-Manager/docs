@@ -27,7 +27,7 @@ amp-tasks.bat new_domain <domain> [scaffold]
 | `domain` | Project name (auto-converted to `name.local`) |
 | `scaffold` | Optional: "scaffold" to copy template files |
 
-**Output:**
+**Output:**   
 
 ```json
 {
@@ -79,6 +79,7 @@ List domains managed by AMP (with config/SSL status).
 amp-tasks.bat list_domains
 ```
 
+
 ## Certificate Authority (SSL)
 
 ### ca_status
@@ -120,6 +121,7 @@ Regenerate SSL for all domains.
 ```bash
 amp-tasks.bat regenerate_all_ssl
 ```
+
 
 ## SSH Keys
 
@@ -201,7 +203,7 @@ Execute database query.
 amp-tasks.bat db_query <query>
 ```
 
-**Query Formats:**
+**Query Formats:**   
 
 | Format | Example | Description |
 |--------|---------|-------------|
@@ -283,6 +285,7 @@ amp-tasks.bat workflow_sftp <host> <username> <localPath> <remotePath> <keyFile>
 | `remotePath` | Remote destination |
 | `keyFile` | SSH private key path |
 | `keyType` | "temp" or "permanent" |
+
 
 ### workflow_webhook
 

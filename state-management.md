@@ -9,7 +9,6 @@ AMP Manager uses two storage systems:
 | **JSON Files** (users/ folder) | User data, encrypted content | Yes |
 | **Zustand** | UI state, real-time data | In-memory |
 
----
 
 ## JSON File Storage - Persistent User Data
 
@@ -33,6 +32,7 @@ AMP Manager uses two storage systems:
 | Databases | `users/user_{username}/databases.json` | No |
 | Databases Cache | `users/user_{username}/databases_cache.json` | No |
 | App Config | `config.json` | No (lastUser only) |
+
 
 ### Folder Structure (v1.0+)
 
@@ -62,6 +62,7 @@ ampdb/    # MariaDB database (unaffected)
 {dbname}/ # User's MariaDB databases
 ```
 
+
 #### Why `user_` Prefix?
 
 The `user_` prefix (not `user-`) avoids conflicts with MariaDB databases:
@@ -70,6 +71,7 @@ The `user_` prefix (not `user-`) avoids conflicts with MariaDB databases:
 - AMP Manager creates: `/users/user_myproject/` (no conflict)
 
 Also uses forward slashes for cross-platform path compatibility (Neutralino normalizes paths).
+
 
 #### Security Model
 
@@ -91,11 +93,13 @@ The password is never stored. Instead, a validation token proves password knowle
    - Encryption key stored in memory (cleared on logout)
    - All encrypted files use this key
 
+
 ### Storage Location
 
 - **Path**: `NL_PATH/data/` (app data folder)
 - **Helper**: `src/lib/storage.ts` (low-level file operations)
 - **High-level API**: `src/lib/db.ts` (JSON storage functions)
+
 
 ### JSON Storage Functions
 
@@ -117,6 +121,7 @@ Use functions from `src/lib/db.ts`:
 | `logActivityJSON()` | Activity logging |
 | `deleteUserData()` | Complete user data deletion |
 
+
 ### Accessing Data
 
 ```typescript
@@ -136,7 +141,6 @@ await saveSitesJSON(sites);
 
 **File**: `src/lib/db.ts` - JSON storage functions with encryption support
 
----
 
 ## Zustand - UI State
 
@@ -147,6 +151,7 @@ await saveSitesJSON(sites);
 | Docker Metrics | Real-time container stats | `src/stores/dockerMetricsStore.ts` |
 | Docker Settings | Polling preferences | `src/stores/dockerSettings.ts` |
 | Dashboard Settings | Dashboard preferences | `src/stores/dashboardSettings.ts` |
+
 
 ### Accessing a Store
 
@@ -218,6 +223,7 @@ creds.push(newCredential);
 await saveCredentialsJSON(user, creds, encryptionKey);
 ```
 
+
 ### Reading Data
 
 ```typescript
@@ -229,6 +235,7 @@ const [sites, tags] = await Promise.all([
   loadTagsJSON()
 ]);
 ```
+
 
 ### Deleting All User Data
 

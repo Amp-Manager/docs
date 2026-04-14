@@ -5,7 +5,6 @@ Two things you need to understand:
 1. **How the UI talks to your system** (commands)
 2. **How Docker accesses your files** (data)
 
----
 
 ## 1. Command Flow (UI -> System)
 
@@ -33,7 +32,7 @@ flowchart LR
     E --> F
 ```
 
-**Simple explanation:**
+**Simple explanation:**  
 
 | Step | What Happens |
 |------|-------------|
@@ -44,7 +43,7 @@ flowchart LR
 | 5. Batch does the work | Modifies hosts, SSL, Docker, files |
 | 6. Returns JSON | `{ "status": "ok", ... }` |
 
----
+
 
 ## 2. Data Flow (Docker -> Your Files)
 
@@ -71,6 +70,7 @@ flowchart TB
     D --> G
 ```
 
+
 **Bind mounts** connect containers to your folders:
 
 | Folder | Container | What's Inside |
@@ -79,7 +79,7 @@ flowchart TB
 | `www/` | Angie, PHP | Your website code (editable in IDE) |
 | `data/` | MariaDB | Database files (persists between runs) |
 
----
+
 
 ## Why This Matters
 
@@ -87,7 +87,7 @@ flowchart TB
 - **Your configs are in `config/`** - modify angie.conf, Angie reloads
 - **Your data is in `data/`** - database survives container restarts
 
----
+
 
 ## Quick Reference
 
@@ -104,7 +104,7 @@ amp-manager/
 |-- data/              # Database files
 ```
 
----
+
 
 ## Related Docs
 
