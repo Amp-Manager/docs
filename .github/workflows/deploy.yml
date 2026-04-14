@@ -1,21 +1,21 @@
-# .github/workflows/deploy.yml
 name: Deploy Docs to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'      # Only rebuild if docs change (if using monorepo)
+      - '**.md'
+      - '.vitepress/**'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/deploy.yml'
-  workflow_dispatch:   # Allow manual trigger
+  workflow_dispatch:
 
-# Sets permissions for GITHUB_TOKEN to allow deployment
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -32,18 +32,21 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          cache-dependency-path: 'docs/package-lock.json'
+          # ✅ FIX: package-lock.json is at repo root (no "docs/" prefix)
+          cache-dependency-path: 'package-lock.json'
 
       - name: Install dependencies
-        run: cd docs && npm ci
+        # ✅ FIX: No "cd docs" — repo root IS the docs folder
+        run: npm ci
 
       - name: Build VitePress
-        run: cd docs && npm run docs:build
+        run: npm run docs:build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist
+          # ✅ FIX: Build output is at repo root/.vitepress/dist
+          path: .vitepress/dist
 
   deploy:
     environment:
