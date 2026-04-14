@@ -19,11 +19,12 @@ export default withMermaid({
     // lineNumbers: false // whether to show line numbers in mermaid code blocks (default: false)
   },
   head: [
-    // Load JavaScript library from a CDN
+    ['link', { rel: 'icon', href: '/docs/images/amp-manager-512.png' }],
+    ['meta', { property: 'og:image', content: '/docs/images/amp-manager-512.png' }]
   ],
   lastUpdated: true,
   themeConfig: {
-    logo: '/amp-manager-logo-32.png',
+    logo: '/docs/images/amp-manager-logo-32.png',
     nav: [
       { text: 'Guide', link: '/guide' },
       { text: 'Config', link: '/config' },
