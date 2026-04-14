@@ -179,7 +179,7 @@ Now that you have a site running:
 | Build a website | Add files to `D:\amp-manager\www\myportfolio` |
 | Use a database | Go to **Databases** -> Create one |
 | Add notes | Go to **Notes** -> Add a note |
-| Learn more | See [for-developers.md](./getting-started/for-developers) |
+| Learn more | See [for-developers.md](./for-developers) |
 
 
 

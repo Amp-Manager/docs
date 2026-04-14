@@ -164,7 +164,7 @@ AMP uses a hybrid architecture:
 | Hooks | React hooks | `useProjectSync` |
 | State | Zustand | `useDockerSettings` |
 
-See [CONTRIBUTING.md](./CONTRIBUTING) for full patterns.
+See [Contributing](./contributing) for full patterns.
 
 ---
 

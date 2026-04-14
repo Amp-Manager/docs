@@ -275,5 +275,5 @@ When adding new features:
 ## Questions?
 
 - Open an issue for bugs or feature requests
-- Check [Home](./Home) for overview
+- Check [Home](./index) for overview
 - See [Troubleshooting](./troubleshooting) for common issues

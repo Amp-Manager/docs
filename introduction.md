@@ -63,17 +63,17 @@ AMP Manager provides a unified interface for:
 
 | Document | Description |
 |----------|-------------|
-| [Core Concepts](./01-Core-Concepts) | How AMP works |
+| [Core Concepts](./core-concepts) | How AMP works |
 | [For Students](./for-students) | Step-by-step for beginners |
 | [For Developers](./for-developers) | Quick start for devs |
 | [Architecture](./architecture) | System design |
 | [Amp Tasks Reference](./amp-tasks-reference) | Batch commands |
 | [API Reference](./api-reference) | AMPBridge API |
-| [Component Reference](./06-Component-Reference) | UI components |
-| [User Interface](./07-User-Interface) | UI tech stack |
+| [Component Reference](./component-reference) | UI components |
+| [User Interface](./user-interface) | UI tech stack |
 | [Security](./security) | Security model |
 | [Workflows](./workflows-deployment) | Deployment guides |
-| [Tunneling](./10-Local-Tunneling) | Tunnel services |
+| [Tunneling](./local-tunneling) | Tunnel services |
 | [Contributing](./contributing) | Developer guide |
 | [Troubleshooting](./troubleshooting) | Common issues |
 | [Glossary](./glossary) | Terms explained |
