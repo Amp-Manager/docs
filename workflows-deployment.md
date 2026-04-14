@@ -99,11 +99,11 @@ Never share the **private key** - it stays on your machine.
 
 ### Why Does This Work?
 
-SSH uses "asymmetric cryptography": what the public key encrypts, only the private key can decrypt. The server sends a challenge encrypted with your public key; your private key solves it. The server never sees your private key - it just verifies the answer.
-
-### Simple Explanation
-
-> "Imagine you have a secret handshake. The public key is like a video of someone else doing their half of the handshake. The private key is your half. When you connect, the server shows you the video (public key), and you complete the handshake with your secret move (private key). The server sees the full handshake works - but never learns your secret move."
+SSH uses "asymmetric cryptography":   
+what the public key encrypts, only the private key can decrypt.   
+The server sends a challenge encrypted with your public key;  
+your private key solves it.   
+The server never sees your private key, it just verifies the answer.
 
 
 ## Getting Your Public Key
