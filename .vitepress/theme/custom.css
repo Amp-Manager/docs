@@ -17,9 +17,14 @@
 .dark {
 color-scheme: dark;
 
-  --color-base-100: oklch(27% 0.020 227);
-  --color-base-200: oklch(22% 0.020 227);
-  --color-base-300: oklch(19% 0.020 227);
+  --color-bg: oklch(23.85% 0.0205 227.5);
+/*   --color-base-100: oklch(27% 0.02 227);
+  --color-base-200: oklch(22% 0.02 227);
+  --color-base-300: oklch(19% 0.02 227); */
+
+    --color-base-100: oklch(25% 0.025 240);
+  --color-base-200: oklch(21% 0.025 240);
+  --color-base-300: oklch(18% 0.025 240);
 
 /* Transparent variants for hover, overlay, etc. */
   --brand-80: oklch(20% 0.025 227 / 0.8);
@@ -67,12 +72,17 @@ color-scheme: dark;
     /* Mix 10% of base-content with transparent */ 
     color-mix(in srgb, rgb(48 63 159), #2560ff 90%) 50%, #099ef6 70%);
 
+    --vp-shadow-1: 0 1px 2px rgb(0 0 0 / 50%), 0 1px 2px rgba(0, 0, 0, .06);
+
+}
+.dark body {
+  background: var(--color-base-200);
 }
 
 .VPHomeHero,
 .bg-dots {
   --dot-bg: var(--color-base-200);
-  --dot-color: rgb(37, 96, 255);
+  --dot-color: #303f9f;
   --dot-size: 1px;
   --dot-space: 6px;
 	background:
@@ -88,7 +98,7 @@ color-scheme: dark;
     /* Mix 30% of color with transparent */
     color-mix(in srgb, #2560ff, transparent 50%) 0%,
     /* Mix 10% of base-content with transparent */
-    color-mix(in srgb, #303f9f, transparent 90%) 40%,
+    color-mix(in srgb, #303f9f, transparent 90%) 21%,
     transparent 60%
   );
   /* border: 2px solid #2560ff50; */
@@ -104,16 +114,17 @@ color-scheme: dark;
   background-position: -100px top; */
   transform: translate(-70%, -70%);
 }
-.VPFeatures {
-    margin-top: 48px;
+
+.VPHome {
+    margin: 0 auto !important;
 }
 
-.dark body {
-  background: var(--color-base-200);
+.VPFeatures {
+    margin: 48px auto !important;
 }
 
 .dark .VPFeature {
-    background: var(--brand-80);
+    background: var(--brand-40);
     border: 1px solid var(--color-base-100);
     box-shadow: 1px 2px 4px 0px var(--color-base-300);
 }
@@ -126,16 +137,17 @@ color-scheme: dark;
 .dark .VPNavBar:not(.home.top) .content-body {
   background:inherit;
 }
-.dark .VPSidebar {
+/* .dark .VPSidebar {
   background: #1115;
-}
+  background: var(--color-base-300);
+} */
 /* header nav and sidebar */
 .VPNav,
 .VPSidebar {
     background-color: var(--vp-sidebar-bg-color);
 }
 .aside-curtain {
-  background: none;
+  background: none !important;
 }
 /* Table */
 .vp-doc table {
@@ -157,5 +169,89 @@ img, svg, video, canvas, audio, iframe, embed, object {
     display: block;
     background: var(--vp-sidebar-bg-color);
     padding: 8px;
-    border-radius: 8px;
+    border-radius: 1rem;
+}
+.VPHome {
+  margin-bottom: 0;
+}
+.VPHome .container:has(section) {
+  max-width: 100%;
+  padding: 0;
+}
+
+.VPHome section {
+  margin: 0 auto;
+  padding: 3rem;
+  width: 100%;
+}
+.VPHome section > article {
+  max-width: 1152px;
+  margin: auto;
+  padding: 0rem;
+}
+.odd {
+  background: var(--color-base-300);
+}
+.screenshot {
+  padding:  0;
+  margin: 0 auto;
+}
+.flex {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  margin: auto;
+  max-width: 1152px;
+}
+.flex > div {
+  /* border: 1px solid var(--color-base-100);
+  padding: 0.5rem; */
+  flex-grow: 1;
+  width: 50%;
+}
+.txt-12 {
+  color: var(--vp-c-text-2);
+  font-size: 0.75rem;
+}
+.txt-14 {
+  color: var(--vp-c-text-2);
+  font-size: 0.875rem;
+}
+.txt-24 {
+  color: var(--vp-c-text-2);
+  font-size: 1.5rem;
+}
+.center {
+  text-align: center;
+}
+.txt-48 {
+  color: var(--vp-c-text-1);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 64px;
+  margin: 2rem auto;
+}
+
+.VPHome .flex a.btn-cta {
+    display: flex;
+    justify-content: center;
+    border-color: var(--vp-button-brand-border);
+    color: var(--vp-button-brand-text);
+    background-color: var(--vp-button-brand-bg);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin: 4rem; 
+    line-height: 38px;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    max-width:100%;
+    transition: all 0.25s;
+}
+.VPHome .flex a.btn-cta.alt {
+  background-color: var(--vp-c-brand-dark);
+}
+.VPHome .flex a.btn-cta:hover {
+  opacity: 0.8;
 }

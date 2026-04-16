@@ -121,6 +121,10 @@ export default withMermaid({
         ]
       }
     ],
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2026 Nuno Luciano'
+    }
   },
 
 });

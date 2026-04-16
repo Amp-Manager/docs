@@ -250,6 +250,26 @@ The application requires UAC (User Account Control) elevation to function. Follo
 
 > **IMPORTANT**: Step 4 is required! Without running `post-build.bat`, the app runs without admin privileges.
 
+## Release Package Structure
+
+When building a release, the final ZIP contains:
+
+| File/Folder | Purpose |
+|-------------|---------|
+| `amp-manager-win_x64.exe` | Main executable |
+| `resources.neu` | Bundled web UI (required) |
+| `amp-tasks.bat` | Backend task runner |
+| `docker-compose.yml` | Container orchestration |
+| `docker-compose.override.yml` | Local overrides |
+| `.env` | Environment configuration |
+| `angie_cache/` | Angie server cache |
+| `config/` | App configuration |
+| `data/` | User data storage |
+| `logs/` | Log files |
+| `www/` | Local domain web roots |
+| `README.md` | Documentation |
+
+> **Note**: `resources.neu` is required - it contains the compiled React UI that Neutralino loads at runtime.
 
 ### Why UAC is Required
 

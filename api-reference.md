@@ -487,10 +487,34 @@ Starts a heartbeat to prevent the app from hanging during idle periods.
 ```typescript
 import { startKeepalive } from '@/services/AMPBridge';
 
-// Start heartbeat every 60 seconds (default)
-startKeepalive(60000);
+// Start heartbeat every 30 seconds (default)
+startKeepalive(30000);
 ```
 
+> **Note**: The keepalive pings silently fail. If the backend becomes unresponsive, the `serverOffline` event fires and triggers a navigation to the login screen.
+>
+> **Diagnostic**: Check browser console for `[AMP] Keepalive` logs to verify the heartbeat is firing.
+
+### `serverOffline` Event
+
+When the NeutralinoJS backend becomes unresponsive (freeze detection), the app automatically navigates to `/` which triggers the login modal. This ensures:
+
+- User is prompted to re-authenticate after idle periods
+- No duplicate error messages
+- Clean session recovery
+
+> **Diagnostic**: Check browser console for `[AMP] serverOffline event fired` when disconnect occurs.
+
+### Troubleshooting Idle Freezes
+
+If the app becomes unresponsive after idle:
+
+1. Open browser DevTools (F12) -> Console tab
+2. Look for `[AMP]` log messages:
+   - `[AMP] Keepalive starting with 30000ms interval` - keepalive active
+   - `[AMP] Keepalive ping #N failed` - backend not responding
+   - `[AMP] serverOffline event fired` - critical disconnect detected
+3. Check NeutralinoJS logs in app data folder
 
 ### `execWithTimeout(command, timeout?)`
 
@@ -502,7 +526,6 @@ import { execWithTimeout } from '@/services/AMPBridge';
 // Execute with 30 second timeout
 const result = await execWithTimeout('docker ps', 30000);
 ```
-
 
 ### `isDevMode()`
 

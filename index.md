@@ -63,6 +63,69 @@ features:
     linkText: Contribute
 ---
 
-## Welcome to AMP Manager Documentation!
+<section class="odd">
+  <article>
+    <div class="screenshot">
+      <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/screenshots/amp-manager-desktop-prototype.jpg" width="100%" height="auto" alt="AMP Manager Dashboard" />
+    </div>
+  </article>
+</section>
 
-This is the central hub for learning everything about AMP Manager, from getting your first site up and running to contributing to its development.
+<section>
+  <article class="flex">
+    <div>
+      <div class="txt-48">Monitor & Manage Your Stack</div>
+      <p class="txt-24">
+        Real-time visibility into containers, performance, and storage, with safe versioned configs.
+      </p>
+      <Badge type="info" text="Docker" />
+      <ul>
+        <li>Start, stop, or reload containers instantly </li>
+        <li>Track CPU, memory, and disk usage in real time </li>
+        <li>See exactly where your storage is used (databases, /www, binds) </li>
+        <li>Backup and restore factory configs with version history </li>
+      </ul>
+    </div>
+    <div>
+      <p align="center">
+        <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/images/amp-manager-docker-screen.jpg" width="100%" height="auto" />
+      </p>
+    </div>
+  </article>
+</section>
+
+<section>
+  <article class="flex">
+    <div>
+      <p align="center">
+        <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/images/amp-manager-workflow-screen.jpg" width="100%" height="auto" />
+      </p>
+    </div>
+    <div>
+      <div class="txt-48">Build Workflows Visually</div>
+      <p class="txt-24">
+        Drag-and-drop node builder for local & remote synchronization. Push updates or pull repos with step-by-step workflows.
+      </p>
+      <Badge type="warning" text="Workflows" />
+      <ul>
+        <li>Drag & connect nodes to map your deployment pipeline </li>
+        <li>Push local sites to remote servers (Git or SFTP)</li>
+        <li>Pull remote repos directly to your local environment</li>
+      </ul>
+    </div>
+  </article>
+  <article>
+    <p class="txt-24 center">
+    This is the central hub for learning everything about AMP Manager, <br>
+    from getting your first site up and running to contributing to its development.
+    </p>
+    <div class="flex cta">
+      <div>
+      <a class="btn-cta" href="/docs/for-users.html">Get Started For Users</a>
+      </div>
+      <div>
+      <a class="btn-cta alt" href="/docs/for-developers.html">For Developers</a>
+      </div>
+    </div>
+  </article>
+</section>
