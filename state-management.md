@@ -139,6 +139,20 @@ sites.push(newSite);
 await saveSitesJSON(sites);
 ```
 
+**Encrypted data requires user and key:**
+
+```typescript
+import { loadNotesJSON, saveNotesJSON } from '@/lib/db';
+
+const { user, encryptionKey } = useAuth();
+
+// Load notes (key is optional - decrypts if provided)
+const notes = await loadNotesJSON(user, encryptionKey || undefined);
+
+// Save notes - only encrypt if toggle is enabled
+await saveNotesJSON(user, notes, formData.is_encrypted ? encryptionKey : undefined);
+```
+
 **File**: `src/lib/db.ts` - JSON storage functions with encryption support
 
 
@@ -223,6 +237,27 @@ creds.push(newCredential);
 await saveCredentialsJSON(user, creds, encryptionKey);
 ```
 
+### Explicit User Parameter for Async Operations
+
+In async operations (like sync), always pass user explicitly to ensure data saves to the correct user's folder:
+
+```typescript
+import { saveDomainStatusJSON, saveSitesJSON, loadSettingsJSON, saveSettingsJSON } from '@/lib/db';
+
+// In useProjectSync.ts - pass user explicitly
+const existingStatuses = await loadDomainStatusJSON();
+const allStatuses = [...existingStatuses, ...newStatuses];
+await saveDomainStatusJSON(user, allStatuses);  // Explicit user
+
+const settings = await loadSettingsJSON(user);
+settings.lastSyncTimestamp = Date.now();
+await saveSettingsJSON(user, settings);  // Explicit user
+
+// Plain file saves also benefit from explicit user
+await saveSitesJSON(user, filteredSites);  // Explicit user
+```
+
+**Key rule:** When in doubt, pass the user explicitly - it's safer than relying on global state.
 
 ### Reading Data
 

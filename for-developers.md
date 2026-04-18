@@ -154,6 +154,46 @@ All user data is stored in JSON files in `users/user_{username}/` with selective
 Password -> PBKDF2 -> AES Key -> Encrypt -> JSON Files
 ```
 
+### 3. App Initialization & User State
+
+On app startup, AMP Manager restores user state to enable JSON operations:
+
+**Flow:**
+1. `main.tsx` loads `config.json` → gets `lastUser`
+2. Calls `setCurrentUser(lastUser)` to set global `_currentUser`
+3. Global `_currentUser` enables `ensureUser()` in `db.ts`
+
+**Why this matters:**
+- Users don't need to re-login after app restart
+- JSON storage functions work immediately without auth errors
+- Dashboard loads correct user data on startup
+
+**Key code:**
+- `src/lib/db.ts:12-14` - `setCurrentUser()` function
+- `src/lib/db.ts:28-31` - `ensureUser()` throws if not set
+- `src/main.tsx:16-18` - Restores user on startup
+
+### 4. User Parameter Pattern for JSON Functions
+
+When saving data, use the explicit `user` parameter for reliability:
+
+```typescript
+// Encrypted files - user at args[0], data at args[1], key at args[2]
+await saveNotesJSON(user, allNotes, formData.is_encrypted ? encryptionKey : undefined);
+await saveCredentialsJSON(user, creds, encryptionKey);
+await saveSettingsJSON(user, settings, encryptionKey);
+
+// Plain files - data at args[0] (user comes from global _currentUser)
+await saveSitesJSON(allSites);
+await saveDomainStatusJSON(statuses);
+
+// BUT: Pass user explicitly in sync to ensure correct folder
+await saveSitesJSON(user, filteredSites);
+await saveDomainStatusJSON(user, allStatuses);
+```
+
+**Key rule:** In async operations (like sync), always pass user explicitly to ensure data saves to the correct user's folder.
+
 ### 3. Service Layer Pattern
 
 AMP uses a hybrid architecture:
@@ -290,6 +330,206 @@ src/
 |-- lib/             # Utilities (db, crypto)
 |-- types/           # TypeScript definitions
 ```
+
+
+## JSON Storage Function Signatures (IMPORTANT)
+
+Understanding the argument patterns is critical to avoid bugs. There are **three distinct patterns**:
+
+### Pattern 1: Encrypted Files (user, data, key)
+
+Used for files that store sensitive data. Key is at `args[2]`, data at `args[1]`:
+
+```typescript
+// Functions using this pattern:
+saveNotesJSON(user, data, key?)
+saveCredentialsJSON(user, data, key?)
+saveSettingsJSON(user, data, key?)
+saveWorkflowsJSON(user, data, key?)
+saveSiteConfigsJSON(user, data, key?)
+
+// Example:
+await saveNotesJSON(user, notes, encryptionKey);
+await saveSettingsJSON(user, settings, encryptionKey);  // key is optional
+```
+
+**In db.ts:**
+```typescript
+export async function saveNotesJSON(..._args: any[]): Promise<void> { 
+  const data = _args[1] || [];  // data at index 1
+  const key = _args[2] instanceof CryptoKey ? _args[2] : null;  // key at index 2
+  await dataStorage.saveUser(ensureUser(), 'notes.json', data, key ? { encrypt: true, key } : undefined); 
+}
+```
+
+### Pattern 2: Plain Files (data only)
+
+Used for non-sensitive data. Data at `args[0]`:
+
+```typescript
+// Functions using this pattern:
+saveTagsJSON(data)
+saveTunnelsJSON(data)
+saveActivityLogsJSON(data)
+saveDatabasesJSON(data)
+saveDatabasesCacheJSON(data)
+
+// Example:
+await saveTagsJSON(tags);
+await saveTunnelsJSON(tunnels);
+```
+
+**In db.ts:**
+```typescript
+export async function saveTagsJSON(..._args: any[]): Promise<void> { 
+  const data = _args[0] || [];  // data at index 0
+  await dataStorage.saveUser(ensureUser(), 'tags.json', data); 
+}
+```
+
+### Pattern 3: Plain Files WITH User (user, data)
+
+Used for files that need explicit user (for sync reliability). User at `args[0]`, data at `args[1]`:
+
+```typescript
+// Functions using this pattern:
+saveSitesJSON(user, data)
+saveDomainStatusJSON(user, data)
+
+// Example:
+await saveSitesJSON(user, filteredSites);
+await saveDomainStatusJSON(user, allStatuses);
+```
+
+**In db.ts:**
+```typescript
+export async function saveSitesJSON(..._args: any[]): Promise<void> { 
+  const data = _args[1] || [];  // data at index 1 (NOT index 0!)
+  await dataStorage.saveUser(ensureUser(), 'sites.json', data); 
+}
+```
+
+### Common Bug: Using Wrong Index
+
+**DON'T do this:**
+```typescript
+// WRONG - saves "nuno" (username) instead of data!
+await saveSitesJSON(user, filteredSites);  // if function expects data at args[0]
+```
+
+**DO this:**
+```typescript
+// RIGHT - know which pattern your function uses
+await saveSitesJSON(user, filteredSites);   // Pattern 3: user at args[0], data at args[1]
+await saveTagsJSON(tags);                    // Pattern 2: data at args[0]
+await saveNotesJSON(user, notes, key);      // Pattern 1: user at args[0], data at args[1], key at args[2]
+```
+
+### The `is_encrypted` Toggle Pattern
+
+For notes, the UI toggle determines whether to encrypt:
+
+```typescript
+// In useNotes.ts handleSaveNote:
+await saveNotesJSON(user, allNotes, formData.is_encrypted ? encryptionKey : undefined);
+//                      ^user    ^data         ^key only when toggle is ON
+```
+
+This ensures normal notes are saved as plain text (when toggle is OFF), while encrypted notes use the encryption key.
+
+### Sync Process Flow (Important)
+
+The sync in `useProjectSync.ts` follows this flow:
+
+```typescript
+// 1. Load existing data
+const existingSitesArray = Array.isArray(existingSites) ? existingSites : [];
+const existingStatusesArray = Array.isArray(existingStatuses) ? existingStatuses : [];
+
+// 2. Scan for new domains from backend
+const domainStatuses = ampDomains.map(d => ({ ... }));
+const newDomains = new Set(domainStatuses.map(s => s.domain));
+
+// 3. Build combined statuses (remove old for scanned domains, add fresh data)
+// IMPORTANT: Filter OUT domains that will be re-scanned (!newDomains.has)
+const existingToKeep = existingStatusesArray.filter(s => !newDomains.has(s.domain));
+const allStatuses = [...existingToKeep, ...domainStatuses];
+await saveDomainStatusJSON(user, allStatuses);
+
+// 4. Build combined sites (update existing or add new)
+// Uses findIndex to update if exists, push if new
+const allSites = [...existingSitesArray];
+for (const status of domainStatuses) {
+  const siteIndex = allSites.findIndex(s => s.id === status.domain);
+  if (siteIndex >= 0) {
+    allSites[siteIndex] = site;  // Update existing
+  } else {
+    allSites.push(site);  // Add new
+  }
+}
+await saveSitesJSON(user, allSites);
+
+// 5. Save timestamp
+await saveSettingsJSON(user, settings);
+```
+
+**Key points:**
+- Step 3 uses `!newDomains.has()` to REMOVE old entries before adding fresh scan data - prevents duplication
+- Step 4 uses `findIndex` to update in-place rather than filter + concatenate (which would cause duplication)
+- This ensures exactly 1 entry per domain in both domain_status.json and sites.json
+
+---
+
+## Config.json Merge Pattern (IMPORTANT)
+
+When updating `config.json`, you must merge with existing data to preserve watchdog instance info:
+
+### The Problem
+
+The `config.json` file stores both:
+- **User data:** `lastUser`
+- **Instance data:** `instanceId`, `pid`, `port`, `launchedAt`, `processName`
+
+If you overwrite with only `{ lastUser }`, you lose instance info and the watchdog stops working.
+
+### Correct Pattern
+
+```typescript
+// CORRECT - always merge
+const existing = await dataStorage.load('config.json') || {};
+await dataStorage.save('config.json', { ...existing, lastUser: username });
+```
+
+### Wrong Pattern
+
+```typescript
+// WRONG - overwrites instance info
+await dataStorage.save('config.json', { lastUser: username });
+```
+
+### Where This Applies
+
+| Location | Context | Status |
+|----------|---------|--------|
+| `AuthContext.tsx` | Login/Register/Logout | ✅ Fixed |
+| `db.ts` | deleteUserData() | ✅ Fixed |
+| `main.tsx` | updateInstanceInfo() | ✅ Already correct |
+
+### Why It Matters
+
+- Watchdog reads PID/port from config.json to monitor app health
+- If overwritten, watchdog can't detect app failure
+- Auto-recovery fails, users see frozen app
+
+### Instance Info Fields
+
+| Field | Source | Purpose |
+|-------|--------|---------|
+| `instanceId` | Generated at startup | Unique identifier |
+| `processName` | Hardcoded | Process name for taskkill |
+| `pid` | `window.NL_PID` | Process ID to monitor |
+| `port` | `window.NL_PORT` | Port to check responsiveness |
+| `launchedAt` | `Date.now()` | Timestamp for debugging | |
 
 
 ## What's Next?

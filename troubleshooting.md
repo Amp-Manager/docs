@@ -275,7 +275,7 @@ If the decision trees don't help:
 2. **Check Docker logs**: `docker logs container_name`
 3. **Search existing issues**: [GitHub Issues](https://github.com/Amp-Manager/amp-manager/issues)
 
----
+
 
 ## Prevention Tips
 
@@ -416,6 +416,61 @@ If the decision trees don't help:
 2. **Verify host**: Ensure the SFTP host is correct and accessible
 3. **Check permissions**: Remote directory must be writable by the SSH user
 4. **Test manually**: Run `sftp -i "C:\Users\you\.ssh\id_ed25519" user@host` in terminal to verify
+
+## NeutralinoJS Zombie State (App Freezes After Sleep)
+
+### Symptom
+
+- App window becomes unresponsive after PC wakes from sleep
+- Cannot drag, minimize, or close the window
+- Task Manager shows "A neutralino.js application" (not our app name)
+- Backend connection is lost - NL_PATH/NL_TOKEN becomes undefined
+
+### Root Cause
+
+This is a known limitation of NeutralinoJS on Windows. When the PC enters sleep and wakes:
+1. The WebSocket connection between frontend and backend breaks
+2. The backend becomes unresponsive (zombie state)
+3. The `serverOffline` event often doesn't fire reliably
+4. Internal recovery mechanisms cannot fix this state
+
+### Solution: Automatic Watchdog
+
+AMP Manager includes a built-in watchdog that monitors and auto-restarts the app:
+
+#### How It Works
+
+| Step | Action |
+|------|--------|
+| 1 | App launches → saves PID, port, processName to config.json |
+| 2 | Watchdog spawns as background process |
+| 3 | Every 30 seconds, watchdog checks: |
+|   | - Is stored PID still running? |
+|   | - Is port responding? |
+| 4 | If checks fail 2 times in a row → kill and restart app |
+| 5 | User sees login screen again - seamless recovery |
+
+#### Config.json Watchdog Data
+
+```json
+{
+  "lastUser": "domain",
+  "processName": "amp-manager-win_x64.exe",
+  "pid": "12345",
+  "port": 15125,
+  "instanceId": "amp-1234567890-abc123",
+  "launchedAt": 1234567890
+}
+```
+
+#### Manual Recovery (If Watchdog Fails)
+
+If the watchdog cannot recover the app:
+
+1. Press `Ctrl+Shift+Esc` to open Task Manager
+2. Find "AMP Manager" or "A neutralino.js application"
+3. End the task
+4. Restart the app manually
 
 
 ## See Also

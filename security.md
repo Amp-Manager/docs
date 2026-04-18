@@ -1,6 +1,6 @@
 # Security & Safety Design
 
-AMP Manager is designed For Users and junior developers. This document explains why certain safety decisions were made.
+AMP Manager is designed for students and junior developers. This document explains why certain safety decisions were made.
 
 
 ## The Problem
@@ -189,7 +189,7 @@ All user data is stored in the `users/user_{username}/` folder. The `user_` pref
 | `users/user_{username}/settings.json` | User settings | YES |
 | `users/user_{username}/workflows.json` | Workflows | YES |
 | `users/user_{username}/site_configs.json` | Config backups | YES |
-| `config.json` | App settings (lastUser only) | No |
+| `config.json` | App settings (lastUser + instanceId, pid, port, launchedAt) | No |
 
 
 ### Why JSON Files?
@@ -265,6 +265,112 @@ AMP Manager provides a complete data wipe function for testing or reset scenario
 
 This design prioritizes **learning safety** over **performance**, making it ideal For Users and junior developers.
 
+## User State Restoration
+
+On app startup, AMP Manager restores user state to enable JSON operations without re-login:
+
+```mermaid
+flowchart TD
+    A[App Starts] --> B[Load config.json]
+    B --> C[Get lastUser]
+    C --> D[setCurrentUser lastUser]
+    D --> E[Global _currentUser set]
+    E --> F[JSON operations work]
+```
+
+**Flow:**
+1. `main.tsx` loads `config.json` → gets `lastUser`
+2. Calls `setCurrentUser(lastUser)` in `db.ts`
+3. Global `_currentUser` enables `ensureUser()` for JSON operations
+
+**Why this matters:**
+- Users don't need to re-login after app restart
+- JSON storage functions work immediately without auth errors
+- Dashboard loads correct user data on startup
+
+**Key files:**
+- `src/lib/db.ts:12-14` - `setCurrentUser()` function
+- `src/lib/db.ts:28-31` - `ensureUser()` throws if not set
+- `src/main.tsx:16-18` - Restores user on startup
+
+**Security note:** The encryption key is NOT stored - users must re-login to decrypt encrypted files. Only the username is persisted in `config.json`.
+
+---
+
+## Watchdog & Instance Monitoring
+
+AMP Manager includes a built-in watchdog that monitors the app for zombie states and auto-recovers.
+
+### How It Works
+
+```mermaid
+flowchart TD
+    A[App Starts] --> B[Generate Instance ID]
+    B --> C[Get PID & Port from Neutralino]
+    C --> D[Save to config.json]
+    D --> E[Spawn Watchdog Process]
+    E --> F[Every 30s: Check PID & Port]
+    F --> G{Still Running?}
+    G -->|Yes| F
+    G -->|No| H[Increment Failure Count]
+    H --> I{Failures ≥ 2?}
+    I -->|No| F
+    I -->|Yes| J[Kill App & Restart]
+    J --> K[Continue Monitoring]
+```
+
+### Instance Info Flow
+
+| Step | File | Action |
+|------|------|--------|
+| 1 | `main.tsx` | Generate `instanceId`, get `NL_PID`, `NL_PORT` |
+| 2 | `db.ts:updateInstanceInfo()` | Save to config.json (merges with existing) |
+| 3 | `AMPBridge.ts:spawnWatchdog()` | Spawn background process |
+| 4 | `amp-tasks.bat :WATCH` | Read config.json, monitor PID/port |
+
+### config.json Contents
+
+```json
+{
+  "lastUser": "nuno",
+  "instanceId": "amp-1234567890-abc123",
+  "processName": "amp-manager-win_x64.exe",
+  "pid": "12345",
+  "port": 51717,
+  "launchedAt": 1234567890123
+}
+```
+
+### Important: Merge Pattern
+
+When updating `config.json`, **always merge with existing data** to preserve instance info:
+
+```typescript
+// WRONG - overwrites entire config
+await dataStorage.save('config.json', { lastUser: username });
+
+// CORRECT - merges with existing
+const existing = await dataStorage.load('config.json') || {};
+await dataStorage.save('config.json', { ...existing, lastUser: username });
+```
+
+**Files that update config.json:**
+- `main.tsx` - Saves instance info on startup
+- `AuthContext.tsx` - Saves lastUser on login/register/logout
+- `db.ts:deleteUserData()` - Clears lastUser on data deletion
+
+All use the merge pattern to preserve instance info.
+
+### Why Watchdog Exists
+
+| Problem | Solution |
+|---------|----------|
+| NeutralinoJS single-threaded event loop | Watchdog monitors from outside |
+| Backend becomes unresponsive (zombie) | PID/port checks detect failure |
+| `serverOffline` event unreliable | Independent 30s check cycle |
+| App appears frozen but process runs | Force restart after 2 failures |
+
+---
 
 ## See Also
 
