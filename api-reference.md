@@ -43,9 +43,40 @@ Get AMP Manager version info.
 
 ```typescript
 const info = await ampBridge.version();
-// { status: 'ok', version: '1.1.0', build: '20240101', engine: 'Neutralino' }
+// { status: 'ok', version: '1.0.0', build: '2026-03-07', engine: 'amp-manager-batch' }
 ```
 
+
+### `ampBridge.isAvailable()`
+
+Check if the AMP backend is available (running in Neutralino).
+
+**Returns:** `boolean`
+
+**Example:**   
+
+```typescript
+if (ampBridge.isAvailable()) {
+  const status = await ampBridge.status();
+} else {
+  console.log('Running in browser dev mode');
+}
+```
+
+
+### `ampBridge.isDevMode()`
+
+Check if running in development mode (browser localhost).
+
+**Returns:** `boolean`
+
+**Example:**   
+
+```typescript
+if (ampBridge.isDevMode()) {
+  console.log('Dev mode - some features disabled');
+}
+```
 
 
 ### `ampBridge.status()`
@@ -282,10 +313,14 @@ Operating system operations.
 ```typescript
 ampBridge.os.open(url: string): Promise<void>
 ampBridge.os.execCommand(command: string): Promise<{ exitCode: number; stdOut: string; stdErr: string }>
-ampBridge.os.spawnProcess(command: string, cwd?: string): Promise<{ id: number; pid: number }>
+ampBridge.os.spawnProcess(command: string, options?: { cwd?: string; envs?: Record<string, string> }): Promise<{ id: number; pid: number }>
 ampBridge.os.updateSpawnedProcess(id: number, action: string, data?: string): Promise<{ status: string }>
-ampBridge.os.showSaveDialog(title: string, options?: any): Promise<string>
-ampBridge.os.showOpenDialog(title: string, options?: any): Promise<string[]>
+ampBridge.os.getSpawnedProcesses(): Promise<any[]>
+ampBridge.os.getEnv(key: string): Promise<string>
+ampBridge.os.getEnvs(): Promise<Record<string, string>>
+ampBridge.os.showSaveDialog(title?: string, options?: any): Promise<string>
+ampBridge.os.showOpenDialog(title?: string, options?: any): Promise<string[]>
+ampBridge.os.showFolderDialog(title?: string, options?: any): Promise<string>
 ```
 
 
@@ -302,6 +337,9 @@ ampBridge.fs.copyFile(source: string, dest: string): Promise<void>
 ampBridge.fs.deleteFile(path: string): Promise<void>
 ampBridge.fs.readDirectory(path: string): Promise<any[]>
 ampBridge.fs.getFolderSize(path: string): Promise<string>
+ampBridge.fs.createDirectory(path: string): Promise<void>
+ampBridge.fs.remove(path: string): Promise<void>
+ampBridge.fs.getAbsolutePath(path: string): Promise<string>
 ```
 
 
@@ -527,16 +565,51 @@ import { execWithTimeout } from '@/services/AMPBridge';
 const result = await execWithTimeout('docker ps', 30000);
 ```
 
-### `isDevMode()`
+### `isDevMode()` 
 
-Check if running in development mode.
+- already documented above as `ampBridge.isDevMode()`
+
+### `execWithRetry(fn, retries?, delayMs?)`
+
+Execute a backend call with retry logic.
 
 ```typescript
-import { isDevMode } from '@/services/AMPBridge';
+import { execWithRetry } from '@/services/AMPBridge';
 
-if (isDevMode()) {
-  console.log('Running in browser dev mode');
-}
+// Retry 3 times with exponential backoff
+const result = await execWithRetry(() => ampBridge.status(), 3, 1000);
+```
+
+
+### `startKeepalive(intervalMs?)`
+
+Start heartbeat to prevent Windows suspension.
+
+```typescript
+import { startKeepalive } from '@/services/AMPBridge';
+
+startKeepalive(30000); // 30 second interval
+```
+
+
+### `stopKeepalive()`
+
+Stop the heartbeat keepalive.
+
+```typescript
+import { stopKeepalive } from '@/services/AMPBridge';
+
+stopKeepalive();
+```
+
+
+### `ampBridge.spawnWatchdog()`
+
+Spawn watchdog for zombie app recovery.
+
+```typescript
+ampBridge.spawnWatchdog();
+// Called automatically on app startup
 ```
 
 

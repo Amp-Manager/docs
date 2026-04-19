@@ -323,6 +323,31 @@ Clear logs folder.
 amp-tasks.bat clear_logs
 ```
 
+### angie_live_status
+
+Check Angie server live status (HTTP health check).
+
+```bash
+amp-tasks.bat angie_live_status
+```
+
+**Output:**
+```json
+{
+  "status": "ok",
+  "live": true,
+  "url": "https://angie.local/",
+  "responseTime": 15
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `live` | true if server responds |
+| `url` | Health check URL |
+| `responseTime` | Response time in ms |
+
+
 
 ## Version
 
@@ -334,6 +359,61 @@ Get AMP Manager version.
 amp-tasks.bat version
 ```
 
+Output:
+```json
+{
+  "status": "ok",
+  "version": "1.0.0",
+  "build": "2026-03-07",
+  "engine": "amp-manager-batch"
+}
+```
+
+
+## Monitoring & Recovery
+
+### watch
+
+Start watchdog monitoring for zombie app recovery.
+
+```bash
+amp-tasks.bat watch
+```
+
+**Purpose:** Detached background process that monitors the AMP Manager app for hangs or freezes, and auto-restarts if needed.
+
+**Configuration:**
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| CHECK_INTERVAL | 30 | Seconds between checks |
+| MAX_FAILURES | 2 | Failures before restart |
+
+**How It Works:**
+
+1. Reads `config.json` to get stored PID and port
+2. Every 30 seconds:
+   - Check 1: Is stored PID still running? (`tasklist /fi "PID eq ..."`)
+   - Check 2: Is port responding? (`netstat`)
+3. Increment failure count if check fails
+4. If 2 failures in a row:
+   - Kill the app (`taskkill /f /pid ...`)
+   - Restart app (`start "" amp-manager-win_x64.exe`)
+   - Reset failure count
+
+**Check Output (logged):**
+```
+[AMP] Watchdog starting...
+[AMP] Monitoring for zombie app recovery...
+[AMP] PID 12345 is running
+[AMP] Port 51717 is responding
+```
+
+**Started By:** `ampBridge.spawnWatchdog()` on app startup (see `src/services/AMPBridge.ts`)
+
+**Location in batch:** `amp-tasks.bat:1514`
+
+---
 
 ## Error Response Format
 
