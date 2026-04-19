@@ -1,6 +1,6 @@
 # User Interface Documentation
 
-This document describes the UI architecture, components, and patterns used in AMP Manager.
+This describes the UI architecture, components, and patterns used in AMP Manager.
 
 ## Technology Stack
 

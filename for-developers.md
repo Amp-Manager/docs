@@ -346,14 +346,14 @@ Before submitting a PR:
 
 ```text
 src/
-|-- components/       # Reusable UI components
-|   |-- layout/       # Layout (Sidebar, Layout)
-|   |-- domains/      # Domain-related components
-|   |-- databases/    # Database components
-|   |-- settings/     # Settings panels
-|   |-- workflow/     # Workflow editor
+|-- components/      # Reusable UI components
+|   |-- layout/      # Layout (Sidebar, Layout)
+|   |-- domains/     # Domain-related components
+|   |-- databases/   # Database components
+|   |-- settings/    # Settings panels
+|   |-- workflow/    # Workflow editor
 |   |-- notes/       # Notes components
-|-- pages/            # Route pages
+|-- pages/           # Route pages
 |-- services/        # Business logic (AMPBridge, DatabaseService)
 |-- context/         # React contexts (Auth, Sync)
 |-- hooks/           # Custom hooks (useProjectSync)

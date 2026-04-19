@@ -1,6 +1,7 @@
 # Security & Safety Design
 
-AMP Manager is designed for students and junior developers. This document explains why certain safety decisions were made.
+AMP Manager is designed with special consideration for students and junior developers.   
+This document explains the reasoning behind, and why certain safety decisions were made.
 
 
 ## The Problem
@@ -13,6 +14,9 @@ When learning local development, students often:
 
 AMP Manager implements multiple safety layers to prevent these issues.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/images/amp-manager-factory-screen.jpg" width="100%" height="auto" />
+</p>
 
 ## Sync on Every Login
 
@@ -31,24 +35,25 @@ flowchart TD
 
 ### Why Not Cache?
 
-caching would be faster, but students wouldn't notice:
+Caching would be faster, but users wouldn't notice:  
+
 - Docker stopped running
 - CA certificate expired
 - Domain configs broken
 
-**For learning environments, seeing problems immediately is better than being fast.**
+**For local environments, seeing problems immediately is better than being fast.**
 
 
 ## Step-by-Step Safety Features
 
-### Step 1: Config Integrity (Capture Factory)
+### Step 1: Config Integrity <Badge type="warning" text="Factory" />  
 
 **What it does:**
 - Copies clean versions of essential config files
 - Stores in `users/` folder (encrypted)
 
 **Why:**
-- If student breaks `angie.conf`, they can restore from factory backup
+- If users break `angie.conf`, they can restore from factory backup
 - No need to re-download or reconfigure
 
 **Essential files captured:**
@@ -62,7 +67,7 @@ caching would be faster, but students wouldn't notice:
 **Location:** `src/services/ConfigGuardService.ts`
 
 
-### Step 2: Env Status (Docker, Folders)
+### Step 2: Env Status <Badge type="tip" text="Docker" /> <Badge type="info" text="Factory" />
 
 **What it does:**
 - Checks Docker is running
@@ -150,6 +155,11 @@ flowchart TB
     OP --> SSL[SSL Certs]
     OP --> D[Docker Control]
     OP --> F[File System]
+
+    style OS fill:#0a1920,stroke:#01579b
+    style App fill:#0a1920,stroke:#01579b
+    style TW fill:#c62828,stroke:#e65100
+    style Backend fill:#273078,stroke:#1b5e20
 ```
 
 | Layer | Protection | File |
@@ -162,7 +172,8 @@ flowchart TB
 
 ### Why This Matters
 
-AMP runs with elevated privileges (admin rights from UAC). If JavaScript is compromised (XSS attack), the allowlists prevent the attacker from:
+AMP runs with elevated privileges (admin rights from UAC). If JavaScript is compromised (XSS attack), the allowlists prevent the attacker from:   
+
 - Deleting arbitrary files
 - Running unauthorized commands
 - Accessing sensitive data
@@ -170,9 +181,10 @@ AMP runs with elevated privileges (admin rights from UAC). If JavaScript is comp
 
 ## Data Persistence
 
-### JSON File Storage (users/ folder)
+### JSON File Storage <Badge type="info" text="User" /> <Badge type="tip" text="Folder" />
 
-All user data is stored in the `users/user_{username}/` folder. The `user_` prefix avoids conflicts with MariaDB databases:
+All user data is stored in the `users/user_{username}/` folder.   
+The `user_` prefix avoids conflicts with MariaDB databases:
 
 | File | Content | Encrypted? |
 |------|---------|-----------|
@@ -199,6 +211,7 @@ All user data is stored in the `users/user_{username}/` folder. The `user_` pref
 - **Portable** - Easy to backup (copy `users/` folder)
 - **Secure** - Sensitive data encrypted with AES-256-GCM
 
+
 ### Security: Encryption
 
 | Feature | Implementation |
@@ -207,6 +220,7 @@ All user data is stored in the `users/user_{username}/` folder. The `user_` pref
 | Key Derivation | PBKDF2 (310,000 iterations) |
 | Salt | Random 16 bytes per user |
 | IV | Random 12 bytes per encryption |
+
 
 ### Where Data Lives
 
@@ -220,15 +234,85 @@ All user data is stored in the `users/user_{username}/` folder. The `user_` pref
 
 ### Built-in Backup
 
-Located in **Settings -> Backup/Restore**:
-- **Export:** Copies `users/` folder to ZIP file
-- **Import:** Restores from backup ZIP
+Located in **Settings -> Backup/Restore**:   
+
+- **Export:** Copies `user_name/` folder to json file
+- **Import:** Restores from backup json
 
 ### Factory Restore
 
-Located in **Docker -> Config Recovery**:
+Located in **Docker -> Config Recovery**:  
+
 - **Factory:** Original config files from Step 1
 - **Snapshots:** Manual backups before destructive operations
+
+
+
+## How User Backup Works
+
+The backup system does exactly what is expected: it **merges multiple user JSON files into a single JSON file** for portability.
+
+### Export Flow (Multiple → Single)
+
+```text
+users/user_name/
+├── sites.json        ─┐
+├── notes.json         │
+├── credentials.json ──┼──►  amp-backup-2026-04-20.json
+├── workflows.json     │
+└── tags.json        ──┘
+```
+
+**Step-by-step:**
+
+| Step | Action | Code |
+|------|--------|------|
+| 1 | Load ALL data from user JSON files | `loadSitesJSON()`, `loadNotesJSON()`, etc. (line 23-29) |
+| 2 | If "includeSensitive" checked: decrypt notes & credentials | `decryptWithKey()` (lines 31-58) |
+| 3 | Merge into single object with metadata | `{ version, timestamp, sites, notes, credentials, workflows, tags }` (lines 61-69) |
+| 4 | Save as single JSON file | `amp-backup-2026-04-20.json` |
+
+### Import Flow (Single → Multiple)
+
+```text
+amp-backup-2026-04-20.json  ──►  users/user_name/
+                                      ├── sites.json
+                                      ├── notes.json
+                                      ├── credentials.json
+                                      └── ...
+```
+
+**Step-by-step:**
+
+| Step | Action | Code |
+|------|--------|------|
+| 1 | Load JSON file | Read from file picker |
+| 2 | If overwrite: clear all user files | `saveXxxJSON(username, [])` (lines 73-80) |
+| 3 | Merge with existing data | `loadXxxJSON()` + `[...existing, ...data]` (lines 83-95) |
+| 4 | If notes/credentials need re-encryption: encrypt with current key | `encryptWithKey()` (lines 100-131) |
+| 5 | Save to individual JSON files | `saveNotesJSON()`, `saveCredentialsJSON()`, etc. |
+
+
+### Key Points
+
+| Feature | How It Works |
+|---------|--------------|
+| **Decryption on export** | Gets user's current session key to decrypt notes/credentials before saving to JSON |
+| **Re-encryption on import** | Gets current session key to re-encrypt before saving to user files |
+| **Merge vs Overwrite** | Import has two modes: merge (add to existing) or overwrite (replace all) |
+| **Portability** | Single JSON file is easy to transfer, share, or backup |
+| **Security warning** | If "includeSensitive" is checked, backup contains plain-text secrets |
+
+
+### Export JSON
+
+Reads all encrypted user files → decrypts with session key → merges into one JSON → saves to file
+    
+### Import JSON
+
+Reads JSON file → merges with existing user files → re-encrypts sensitive data with current key → saves to individual files
+  
+> This design keeps the portability of a single file while maintaining security through on-the-fly encryption/decryption.
 
 
 ## Complete Data Deletion
@@ -239,18 +323,22 @@ AMP Manager provides a complete data wipe function for testing or reset scenario
 
 **Function:** `deleteUserData(username)` in `src/lib/db.ts`
 
-**What it deletes:**
+**What it deletes:**  
+
 - User-specific JSON files in `users/user_{username}/`
 - Updates `config.json` to clear `lastUser`
 
 **Location in UI:** Settings -> Account -> "Delete All Data"
 
-**Use cases:**
+**Use cases:**  
+
 - Complete app reset for fresh start
 - Testing clean installation scenarios
 - User wants to remove all data before giving away device
 
-**Warning:** This action cannot be undone. All user data, domains, credentials, and settings will be permanently deleted.
+<Badge type="danger" text="Danger" />
+
+> **Warning:** This action cannot be undone. All user data, domains, credentials, and settings will be permanently deleted.
 
 
 ## Summary
@@ -263,7 +351,8 @@ AMP Manager provides a complete data wipe function for testing or reset scenario
 | Defense-in-depth | Limits damage from attacks |
 | Per-user JSON | Data isolation |
 
-This design prioritizes **learning safety** over **performance**, making it ideal For Users and junior developers.
+
+> This design prioritizes **reliability and stability**, making it safe for users to learn through experimentation without breaking the app.
 
 ## User State Restoration
 
@@ -284,7 +373,7 @@ flowchart TD
 3. Global `_currentUser` enables `ensureUser()` for JSON operations
 
 **Why this matters:**
-- Users don't need to re-login after app restart
+- Users need to re-login after app restart
 - JSON storage functions work immediately without auth errors
 - Dashboard loads correct user data on startup
 
@@ -293,13 +382,15 @@ flowchart TD
 - `src/lib/db.ts:28-31` - `ensureUser()` throws if not set
 - `src/main.tsx:16-18` - Restores user on startup
 
-**Security note:** The encryption key is NOT stored - users must re-login to decrypt encrypted files. Only the username is persisted in `config.json`.
+> **Security note:** The encryption key is NOT stored - users must re-login to decrypt encrypted files. Only the username is persisted in `config.json`.
 
----
 
-## Watchdog & Instance Monitoring
 
-AMP Manager includes a built-in watchdog that monitors the app for zombie states and auto-recovers.
+## Instance Monitoring
+
+### Watchdog
+
+AMP Manager includes a built-in watchdog that monitors the app for Neutralino.js zombie states and auto-recovers.
 
 ### How It Works
 
@@ -343,12 +434,18 @@ flowchart TD
 
 ### Important: Merge Pattern
 
-When updating `config.json`, **always merge with existing data** to preserve instance info:
+When updating `config.json`, **always merge with existing data** to preserve instance info.
+
+<Badge type="danger" text="WRONG" /> **DON'T do this:**
 
 ```typescript
 // WRONG - overwrites entire config
 await dataStorage.save('config.json', { lastUser: username });
+```
 
+<Badge type="info" text="CORRECT" /> **Use merge:**
+
+```typescript
 // CORRECT - merges with existing
 const existing = await dataStorage.load('config.json') || {};
 await dataStorage.save('config.json', { ...existing, lastUser: username });
@@ -370,7 +467,7 @@ All use the merge pattern to preserve instance info.
 | `serverOffline` event unreliable | Independent 30s check cycle |
 | App appears frozen but process runs | Force restart after 2 failures |
 
----
+
 
 ## See Also
 

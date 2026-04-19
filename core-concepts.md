@@ -1,16 +1,14 @@
 # Core Concepts
 
-## How it works
+- How it works
+- Docker integration
+- SSL certificates
+- Tunneling
 
-## Docker integration
 
-## Tunneling
+## Architecture Overview
 
-## SSL certificates
-
-# Architecture Overview
-
-## High-Level Architecture
+### High-Level Architecture
 
 AMP Desktop uses a three-layer architecture:
 

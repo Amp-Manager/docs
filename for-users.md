@@ -105,6 +105,7 @@ flowchart LR
 
 **Don't worry if it takes a few seconds** - it's checking everything is working correctly.
 
+
 ## Install Your Root CA
 
 To enable HTTPS on your local projects without browser warnings, AMP Manager creates a local Certificate Authority (CA). You need to trust this CA once on your computer.
@@ -217,18 +218,6 @@ flowchart TD
 4. Restart Docker containers
 
 
-## What's Next?
-
-Now that you have a site running:
-
-| Goal | Do This |
-|------|---------|
-| Build a website | Add files to `D:\amp-manager\www\myproject` |
-| Use a database | Go to **Databases** -> Add Database |
-| Add notes | Go to **Notes** -> Add a note |
-| Learn more | See [for-developers.md](./for-developers) |
-
-
 
 ## Glossary (For Now)
 
@@ -239,6 +228,19 @@ Now that you have a site running:
 | **Docker** | Software that runs web servers in the background |
 | **Sync** | AMP checking that everything is working |
 | **Container** | A running web server (Angie, PHP, MariaDB) |
+
+
+
+## What's Next?
+
+Now that you have a site running:
+
+| Goal | Do This |
+|------|---------|
+| Build a website | Add files to `D:\amp-manager\www\myproject` |
+| Use a database | Go to **Databases** -> Add Database |
+| Add notes | Go to **Notes** -> Add a note |
+| Learn more | See [for-developers.md](./for-developers) |
 
 
 

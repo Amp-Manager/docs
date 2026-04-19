@@ -1,6 +1,7 @@
-# amp-tasks.bat Command Reference
+# AMP Tasks Command Reference
 
-Complete reference for all commands available in the AMP Manager backend batch script.
+Complete reference for all commands available in the AMP Manager backend batch script `amp-tasks.bat`
+
 
 ## Usage
 

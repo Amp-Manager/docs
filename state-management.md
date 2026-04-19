@@ -31,31 +31,31 @@ AMP Manager uses two storage systems:
 | Domain Status | `users/user_{username}/domain_status.json` | No |
 | Databases | `users/user_{username}/databases.json` | No |
 | Databases Cache | `users/user_{username}/databases_cache.json` | No |
-| App Config | `config.json` | No (lastUser only) |
+| App Config | `config.json` | No (lastUser, watchdog) |
 
 
 ### Folder Structure (v1.0+)
 
-```
+```text
 users/
-|-- user_{username}/         # ALL user-specific data
+|-- user_{username}/        # ALL user-specific data
 |   |-- user.json           # UNENCRYPTED: salt + validation token
-|   |-- credentials.json   # ENCRYPTED
-|   |-- notes.json         # ENCRYPTED
-|   |-- settings.json     # ENCRYPTED
-|   |-- sites.json        # Plain text
-|   |-- tags.json         # Plain text
-|   |-- tunnels.json     # Plain text
+|   |-- credentials.json    # ENCRYPTED
+|   |-- notes.json          # ENCRYPTED
+|   |-- settings.json       # ENCRYPTED
+|   |-- sites.json          # Plain text
+|   |-- tags.json           # Plain text
+|   |-- tunnels.json        # Plain text
 |   |-- activity_logs.json  # Plain text
-|   |-- workflows.json    # ENCRYPTED
+|   |-- workflows.json      # ENCRYPTED
 |   |-- site_configs.json   # ENCRYPTED
-|   |-- domain_status.json # Plain text
-|   |-- databases.json     # Plain text
+|   |-- domain_status.json  # Plain text
+|   |-- databases.json      # Plain text
 |   |-- databases_cache.json
 |
-|-- user_{another}/       # Another user
+|-- user_{another}/         # Another user
 
-config.json              # Global app config (lastUser only)
+config.json                 # Global app config (lastUser only)
 
 mysql/    # MariaDB (unaffected)
 ampdb/    # MariaDB database (unaffected)
@@ -80,8 +80,8 @@ The password is never stored. Instead, a validation token proves password knowle
 1. **Registration:**
    - Generate random salt
    - Derive encryption key from password + salt
-   - Encrypt "VALIDATION_CHECK" -> { iv, ciphertext }
-   - Save to user.json: { salt, validation_iv, validation_ciphertext }
+   - Encrypt "VALIDATION_CHECK" -> `{ iv, ciphertext }`
+   - Save to user.json: `{ salt, validation_iv, validation_ciphertext }`
 
 2. **Login:**
    - Read user.json (unencrypted)
@@ -180,14 +180,14 @@ const { stats, loading, fetchMetrics } = useDockerMetricsStore();
 
 ## When to Use Which
 
-```
+```text
 Is the data...
-+-- Created by the user? -> JSON files
-+-- Needs encryption? -> JSON files (encrypted)
-+-- Complex queries? -> In-memory after load
-+-- Real-time / changes frequently? -> Zustand
-+-- UI-only state (loading, toggles)? -> Zustand
-+-- Simple preferences? -> Zustand or JSON
+- Created by the user?          -> JSON files
+- Needs encryption?             -> JSON files (encrypted)
+- Complex queries?              -> In-memory after load
+- Real-time/changes frequently? -> Zustand
+- UI-only state (e.g. loading)? -> Zustand
+- Simple preferences?           -> Zustand or JSON
 ```
 
 | Use Case | Storage | Why |
