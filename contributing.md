@@ -134,9 +134,9 @@ flowchart TB
     S3 --> NB
     NB --> BT
 
-    style UI fill:#e1f5fe,stroke:#01579b
-    style Services fill:#fff3e0,stroke:#e65100
-    style Backend fill:#e8f5e9,stroke:#1b5e20
+    style UI fill:#0a1920,stroke:#01579b
+    style Services fill:#c62828,stroke:#e65100
+    style Backend fill:#273078,stroke:#1b5e20
 ```
 
 ### Error Handling Decision Tree
@@ -160,9 +160,9 @@ flowchart TD
     I --> L[User sees toast<br/>notification]
     J --> M[UI shows error<br/>state]
 
-    style D fill:#ffebee,stroke:#c62828
-    style I fill:#fff3e0,stroke:#e65100
-    style G fill:#e1f5fe,stroke:#01579b
+    style D fill:#c62828,stroke:#e65100
+    style I fill:#c62828,stroke:#e65100
+    style G fill:#c62828,stroke:#e65100
 ```
 
 ### Error Handling
@@ -271,7 +271,8 @@ When building a release, the final ZIP contains:
 
 > **Note**: `resources.neu` is required - it contains the compiled React UI that Neutralino loads at runtime.
 
-### Why UAC is Required
+
+## Why UAC is Required
 
 AMP Manager needs administrator privileges to:
 - Modify the Windows hosts file
@@ -283,9 +284,16 @@ AMP Manager needs administrator privileges to:
 
 ## Testing Your Changes
 
-1. **In Browser**: `npm run dev`
-2. **In Desktop App**: `npm run build`, then run `amp-manager.exe`
+1. **UI in Browser**: `npm run dev`
 
+2. **In Desktop App**: `npm run build`, 
+- **Run** `post-build.bat` to Apply UAC manifest
+- Move these two files from `dist/` to the `amp-manager/` root folder:
+
+| File | From | To |
+|------|------|-----|
+| `amp-manager-win_x64.exe` | `dist/` | `amp-manager/` |
+| `resources.neu` | `dist/` | `amp-manager/` |
 
 ### Key Areas to Test
 
@@ -307,6 +315,6 @@ When adding new features:
 
 ## Questions?
 
-- Open an issue for bugs or feature requests
+- [Open an issue](https://github.com/Amp-Manager/amp-manager/issues) for bugs or feature requests
 - Check [Home](./index) for overview
 - See [Troubleshooting](./troubleshooting) for common issues

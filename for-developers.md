@@ -13,24 +13,32 @@ git clone https://github.com/Amp-Manager/amp-manager.git
 cd amp-manager
 npm install
 
-# Development (Vite dev server on port 3000)
+# Development UI (Vite dev server on port 3000)
 npm run dev
 
 # Run full Neutralino desktop app
 npm run dev:app
 
-# Build React UI
+# Build React UI (vite build)
 npm run build
 
 # Build Windows executable
 npm run build:app
+
+# Clean non-Windows files + bin/
+npm run build:clean
+
+# Build app + clean 
+npm run build:win
 ```
 
-> **IMPORTANT**: After `npm run build:app`, you **MUST** run `post-build.bat` to apply the UAC manifest. Without this, the app runs without admin privileges.
+<Badge type="warning" text="POST-BUILD" />
+
+> **IMPORTANT**: After build the executable, you **MUST** run `post-build.bat` to apply the UAC manifest. The app must run with admin privileges.
 
 
 
-### TypeScript Types
+## TypeScript Types
 
 AMP Manager uses `@neutralinojs/lib` npm package but also provides custom type definitions:
 
@@ -43,7 +51,7 @@ AMP Manager uses `@neutralinojs/lib` npm package but also provides custom type d
 **No need to import** `@neutralinojs/lib` in your code - it's automatically embedded by the CLI during `neu build`.
 
 The custom types provide IDE autocomplete for:
-- `window.AMP` (your backend bridge)
+- `window.AMP` (the backend bridge)
 - `window.Neutralino` (Neutralino APIs)
 
 
@@ -56,16 +64,39 @@ AMP Manager uses these patterns to prevent NeutralinoJS backend freeze:
 |---------|---------|-------|
 | `execWithTimeout()` | Wraps batch calls with 30s timeout | `execWithTimeout('amp-tasks.bat docker.up')` |
 | `execWithRetry()` | Retry on transient IPC failures | `execWithRetry(() => ampBridge.status())` |
-| `startKeepalive()` | Heartbeat (60s) to prevent Windows suspension | Auto-started in main.tsx |
+| `startKeepalive()` | Heartbeat (30s) to prevent Windows suspension | Auto-started in main.tsx |
+| **Watchdog** | Zombie recovery - monitors PID/port, restarts app | Spawned by `ampBridge.spawnWatchdog()` on startup |
 
 **Why these exist:**
 
 - NeutralinoJS runs on a single-threaded event loop - a hanging `os.execCommand()` blocks everything
 - Windows may suspend "inactive" desktop apps after ~2 minutes
 - Batch commands (Docker, SSL, etc.) can hang indefinitely without timeout
+- The Neutralino event loop can become unresponsive (zombie state) without external monitoring
 
-See `src/services/AMPBridge.ts` for implementation.
+## Watchdog Details
 
+The watchdog runs as a detached background process:
+
+| Step | Action |
+|------|--------|
+| 1 | App starts → saves PID, port, instanceId to `config.json` |
+| 2 | `ampBridge.spawnWatchdog()` spawns `amp-tasks.bat watch` as background process |
+| 3 | Every 30s, checks: Is stored PID still running? Is port responding? |
+| 4 | If 2 failures in a row → kill app, restart automatically |
+| 5 | Monitoring continues after restart |
+
+```bat
+:: amp-tasks.bat :WATCH section
+:WATCH_LOOP
+timeout /t 30 /nobreak
+:: Check PID and port
+tasklist /fi "PID eq %STORED_PID%"
+netstat -ano | findstr ":%STORED_PORT%"
+:: If failures >= 2, restart app
+```
+
+See `src/services/AMPBridge.ts` for `spawnWatchdog()`, and `amp-tasks.bat:1514` for the Watchdog implementation.
 
 
 ## Architecture Overview
@@ -332,11 +363,16 @@ src/
 ```
 
 
-## JSON Storage Function Signatures (IMPORTANT)
+## JSON Storage 
 
-Understanding the argument patterns is critical to avoid bugs. There are **three distinct patterns**:
+### Function Signatures <Badge type="warning" text="IMPORTANT" />
 
-### Pattern 1: Encrypted Files (user, data, key)
+Understanding the argument patterns is critical to avoid bugs.   
+There are **three distinct patterns**:
+
+---
+
+### Pattern 1: Encrypted Files <Badge type="info" text="user" /> <Badge type="tip" text="data" /> <Badge type="danger" text="key" />
 
 Used for files that store sensitive data. Key is at `args[2]`, data at `args[1]`:
 
@@ -362,7 +398,9 @@ export async function saveNotesJSON(..._args: any[]): Promise<void> {
 }
 ```
 
-### Pattern 2: Plain Files (data only)
+---
+
+### Pattern 2: Plain User Files <Badge type="tip" text="data" />
 
 Used for non-sensitive data. Data at `args[0]`:
 
@@ -386,8 +424,11 @@ export async function saveTagsJSON(..._args: any[]): Promise<void> {
   await dataStorage.saveUser(ensureUser(), 'tags.json', data); 
 }
 ```
+   
 
-### Pattern 3: Plain Files WITH User (user, data)
+---
+
+### Pattern 3: Plain Files WITH <Badge type="info" text="user" /> <Badge type="tip" text="data" />
 
 Used for files that need explicit user (for sync reliability). User at `args[0]`, data at `args[1]`:
 
@@ -409,19 +450,26 @@ export async function saveSitesJSON(..._args: any[]): Promise<void> {
 }
 ```
 
-### Common Bug: Using Wrong Index
+---
+   
+      
 
-**DON'T do this:**
+### Common Bug
+
+Using Wrong Index    
+
+
+<Badge type="danger" text="WRONG" /> **DON'T do this:**
 ```typescript
 // WRONG - saves "nuno" (username) instead of data!
 await saveSitesJSON(user, filteredSites);  // if function expects data at args[0]
 ```
 
-**DO this:**
+<Badge type="info" text="CORRECT" /> **DO this:**
 ```typescript
-// RIGHT - know which pattern your function uses
+// CORRECT - know which pattern your function uses
 await saveSitesJSON(user, filteredSites);   // Pattern 3: user at args[0], data at args[1]
-await saveTagsJSON(tags);                    // Pattern 2: data at args[0]
+await saveTagsJSON(tags);                   // Pattern 2: data at args[0]
 await saveNotesJSON(user, notes, key);      // Pattern 1: user at args[0], data at args[1], key at args[2]
 ```
 
@@ -432,12 +480,12 @@ For notes, the UI toggle determines whether to encrypt:
 ```typescript
 // In useNotes.ts handleSaveNote:
 await saveNotesJSON(user, allNotes, formData.is_encrypted ? encryptionKey : undefined);
-//                      ^user    ^data         ^key only when toggle is ON
+//                   ^user    ^data         ^key only when toggle is ON
 ```
 
 This ensures normal notes are saved as plain text (when toggle is OFF), while encrypted notes use the encryption key.
 
-### Sync Process Flow (Important)
+### Sync Process Flow  <Badge type="warning" text="IMPORTANT" />
 
 The sync in `useProjectSync.ts` follows this flow:
 
@@ -478,9 +526,9 @@ await saveSettingsJSON(user, settings);
 - Step 4 uses `findIndex` to update in-place rather than filter + concatenate (which would cause duplication)
 - This ensures exactly 1 entry per domain in both domain_status.json and sites.json
 
----
 
-## Config.json Merge Pattern (IMPORTANT)
+
+## Config.json Merge Pattern <Badge type="warning" text="IMPORTANT" />
 
 When updating `config.json`, you must merge with existing data to preserve watchdog instance info:
 
@@ -492,7 +540,8 @@ The `config.json` file stores both:
 
 If you overwrite with only `{ lastUser }`, you lose instance info and the watchdog stops working.
 
-### Correct Pattern
+
+<Badge type="info" text="CORRECT" /> **Use this pattern:**
 
 ```typescript
 // CORRECT - always merge
@@ -500,7 +549,7 @@ const existing = await dataStorage.load('config.json') || {};
 await dataStorage.save('config.json', { ...existing, lastUser: username });
 ```
 
-### Wrong Pattern
+<Badge type="danger" text="WRONG" /> **DON'T do this:**
 
 ```typescript
 // WRONG - overwrites instance info
