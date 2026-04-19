@@ -17,11 +17,14 @@ By the end of this guide, you'll have:
 
 Before installing AMP Manager, ensure you have the following:
 
-### 1. Docker Desktop  <Badge type="info" text="Download" />
+
+### 1. Docker Desktop   
 
 Docker Desktop runs the web servers required for your local development sites.
 
-Installation Steps:
+Installation Steps:  
+
+<Badge type="info" text="Download" />  
 
 1. Visit the official [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)
 2. Click "Download for Windows"
@@ -30,15 +33,18 @@ Installation Steps:
 **First Launch:**
 - Docker will request administrator permissions (this is normal).
 - Wait for the Docker whale icon in your system tray to display Running.
-- Initial startup may take 2–5 minutes.
+- Initial startup may take 2–4 minutes.
 
 <Badge type="warning" text="WSL2" />
 
 > If you receive a WSL2-related error, download and install the latest [WSL2 update package](https://aka.ms/wsl2kernel) from Microsoft, then restart Docker Desktop.
 
-### 2. AMP Manager  <Badge type="info" text="Download" />
 
-Installation Steps:  
+### 2. AMP Manager   
+
+Installation Steps:   
+
+<Badge type="info" text="Download" />
 
 1. Download the latest [release of AMP Manager](https://github.com/Amp-Manager/amp-manager/releases)
 2. Extract the contents to a dedicated folder e.g. `D:\amp-manager`
@@ -47,10 +53,13 @@ Installation Steps:
    docker compose up -d
    ```
 4. Launch the application by running `amp-manager-win_x64.exe`
+5. Windows dialog ask for administrator permission — click Yes to continue.
 
-<Badge type="warning" text="SSL" />
 
-> Install your own certificate authority (CA) to run HTTPS sites locally without issue.
+<Badge type="warning" text="Login" />
+
+> Warning: There is no "Forgot Password". Your data is encrypted, if you lose it, your data is gone forever.
+
 
 ## Understanding the Dashboard
 
@@ -96,11 +105,40 @@ flowchart LR
 
 **Don't worry if it takes a few seconds** - it's checking everything is working correctly.
 
+## Install Your Root CA
+
+To enable HTTPS on your local projects without browser warnings, AMP Manager creates a local Certificate Authority (CA). You need to trust this CA once on your computer.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/images/amp-manager-certificates-screen.jpg" width="100%" height="auto" />
+</p>
+
+
+1. Go to the Certificates Page
+Click Certificates in the sidebar.
+2. Generate the Root CA   
+AMP Manager automatically creates the required files:
+- A private key (rootCA-key.pem)
+- A root certificate (rootCA.pem)
+3. Trust the Certificate (Important)   
+You must add `rootCA.pem` to your system's trust store.   
+  - **Windows**:   
+  A dialog will appear. Click Install Certificate.   
+  It's automatically installed in Trusted Root Certification Authorities.    
+  - **Linux/macOS**:   
+  Follow the on-screen prompts to add the certificate to your keychain.
+4. Start Using HTTPS   
+Once trusted, AMP Manager uses this CA to sign certificates for your local sites automatically.
 
 
 ## Creating Your First Site
 
 Let's create a local site called `myproject.local`.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/images/amp-manager-add-site-screen.jpg" width="100%" height="auto" />
+</p>
+
 
 ### Step 1: Go to Domains
 
@@ -108,7 +146,7 @@ Click **Domains** in the sidebar.
 
 ### Step 2: Create New Domain
 
-1. Click the **+** button or "Add Domain"
+1. Click the button "Add Domain"
 2. Enter: `myproject`
 3. Click **Create**
 
@@ -121,6 +159,11 @@ Behind the scenes, AMP Manager:
 3. Creates SSL certificate (HTTPS support)
 4. Configures web server (Angie/nginx)
 
+Example files for `myproject.local` : 
+
+Certificate: `D:\amp-manager\config\certs`  
+Configuration: `D:\amp-manager\config\angie-sites`
+
 ### Step 4: Test It
 
 1. Open your browser
@@ -132,11 +175,12 @@ Behind the scenes, AMP Manager:
 
 ## Common Issues
 
-## Activity Timeline & System Checks
+## System Checks
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Amp-Manager/media/refs/heads/main/screenshots/amp-manager-desktop-prototype-activity.jpg" width="100%" height="auto" />
 </p>
+
 
 ### Docker Running: FAIL
 
@@ -154,7 +198,7 @@ flowchart TD
     F --> G
 ```
 
-**Quick Fix:** Right-click Docker -> Restart -> Wait 30s -> Refresh AMP
+**Quick Fix:** Right-click Docker -> Restart -> Wait 30s -> Refresh AMP Manager
 
 
 ### "SSL: FAIL"
