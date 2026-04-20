@@ -53,8 +53,8 @@ export default withMermaid({
     },
     nav: [
       { text: 'GitHub', link: 'https://github.com/Amp-Manager' },
-      { text: 'Config', link: '/config' },
-      { text: 'Changelog', link: 'https://github.com/Amp-Manager/amp-manager/CHANGELOG.md' }
+      { text: 'AMP Manager', link: 'https://github.com/Amp-Manager/amp-manager' },
+      { text: 'Docs', link: 'https://github.com/Amp-Manager/docs' }
     ],
     editLink: {
       pattern: "https://github.com/amp-manager/docs/edit/main/:path",
