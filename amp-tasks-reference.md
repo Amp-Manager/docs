@@ -386,34 +386,109 @@ amp-tasks.bat watch
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| CHECK_INTERVAL | 30 | Seconds between checks |
-| MAX_FAILURES | 2 | Failures before restart |
+| CHECK_INTERVAL | 20 | Seconds between checks |
+| MAX_FAILURES | 3 | Failures before restart |
+
+**Lock File Mechanism:**
+
+Prevents duplicate watchdogs from running simultaneously:
+
+```bat
+set "LOCK_FILE=%temp%\amp_watchdog.lock"
+
+:: Exit if another watchdog is running
+if exist "%LOCK_FILE%" (
+    echo [AMP] Lock file exists - exiting
+    exit /b 0
+)
+
+:: Acquire lock
+type nul > "%LOCK_FILE%"
+```
 
 **How It Works:**
 
-1. Reads `config.json` to get stored PID and port
-2. Every 30 seconds:
-   - Check 1: Is stored PID still running? (`tasklist /fi "PID eq ..."`)
-   - Check 2: Is port responding? (`netstat`)
-3. Increment failure count if check fails
-4. If 2 failures in a row:
-   - Kill the app (`taskkill /f /pid ...`)
-   - Restart app (`start "" amp-manager-win_x64.exe`)
-   - Reset failure count
+1. Reads `config.json` to get stored PID
+2. Every 20 seconds:
+   - **Check 1 (exitFlag):** Is user quitting? (`findstr` for `exitFlag:true`)
+   - **Check 2 (PID):** Is stored PID still running? (`tasklist /fi "PID eq ..."`)
+3. Increment failure count if PID check fails
+4. If 3 failures in a row → restart app
+5. On clean exit: cleanup lock file, exit
 
-**Check Output (logged):**
+**Monitoring Loop:**
+
+```batch
+:WATCH_LOOP
+timeout /t %CHECK_INTERVAL% /nobreak >nul
+
+:: Check exitFlag FIRST
+findstr /i "\"exitFlag\":true" "%CONFIG_FILE%" >nul 2>nul
+if not errorlevel 1 (
+    goto :CLEANUP
+)
+
+:: Get app PID from config
+set "APP_PID="
+for /f "tokens=2 delims=:" %%a in ('findstr /i "\"pid\"" "%CONFIG_FILE%"') do (
+    set "RAW=%%~a"
+    set "RAW=!RAW: =!"
+    set "RAW=!RAW:,=!"
+    set "RAW=!RAW:"=!"
+    set "APP_PID=!RAW!"
+)
+
+if not defined APP_PID goto :WATCH_LOOP
+
+:: Check if app PID is alive
+tasklist /fi "PID eq !APP_PID!" 2>nul | findstr /i "!APP_PID!" >nul
+if not errorlevel 1 (
+    set "FAILURE_COUNT=0"
+    goto :WATCH_LOOP
+)
+
+:: App dead
+echo [AMP] App PID !APP_PID! NOT FOUND
+set /a FAILURE_COUNT+=1
+
+if %FAILURE_COUNT% GEQ %MAX_FAILURES% (
+    tasklist /fi "imagename eq %EXE_NAME%" 2>nul | findstr /i "%EXE_NAME%" >nul
+    if errorlevel 1 (
+        start "" "%PROJECT_ROOT%%EXE_NAME%"
+        timeout /t 15 /nobreak >nul
+    )
+    set "FAILURE_COUNT=0"
+)
+
+goto :WATCH_LOOP
+
+:CLEANUP
+:: DELETE LOCK FILE
+del "%LOCK_FILE%" 2>nul
+echo [AMP] Watchdog stopped
+endlocal & exit /b 0
 ```
-[AMP] Watchdog starting...
-[AMP] Monitoring for zombie app recovery...
-[AMP] PID 12345 is running
-[AMP] Port 51717 is responding
-```
 
-**Started By:** `ampBridge.spawnWatchdog()` on app startup (see `src/services/AMPBridge.ts`)
+**Clean Close Flow:**
 
-**Location in batch:** `amp-tasks.bat:1514`
+When user clicks X:
+1. Frontend sets `exitFlag=true` in config.json
+2. Frontend deletes `%temp%\amp_watchdog.lock`
+3. App exits → watchdog sees exitFlag, cleans up lock, exits
 
----
+**Key Difference: exitFlag vs crash**
+
+| Scenario | exitFlag | PID Check | Action |
+|----------|----------|-----------|--------|
+| User clicks X | true | N/A | Cleanup & exit |
+| App crash | false | fails 3x | Restart app |
+
+**Started By:** `ampBridge.spawnWatchdog()` on app startup   
+see `src/services/AMPBridge.ts:342`
+
+**Location in batch:** `amp-tasks.bat:1505-1574`
+
+
 
 ## Error Response Format
 

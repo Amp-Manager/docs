@@ -19,6 +19,9 @@ graph TD
     E --> F;
     F -->|Still freezes| G[Enable --debug + share logs];
     F -->|Works| H[✅ Ship fix];
+
+    style B fill:#c62828,stroke:#e65100
+    style G fill:#273078,stroke:#1b5e20
 ```
 
 
@@ -47,11 +50,15 @@ flowchart TD
     E --> A
     M --> N[Search error in docs]
     
-    style E fill:#e3f2fd
-    style G fill:#e3f2fd
-    style I fill:#e3f2fd
-    style L fill:#c8e6c9
-    style N fill:#ffecb3
+    style B fill:#c62828,stroke:#e65100
+    style C fill:#c62828,stroke:#e65100
+    style E fill:#273078,stroke:#1b5e20
+    style F fill:#c62828,stroke:#e65100
+    style H fill:#c62828,stroke:#e65100
+    style G fill:#273078,stroke:#1b5e20
+    style I fill:#273078,stroke:#1b5e20
+    style K fill:#c62828,stroke:#e65100
+    style L fill:#273078,stroke:#1b5e20
 ```
 
 
@@ -83,10 +90,15 @@ flowchart TD
     P -->|No| Q[Start containers]
     P -->|Yes| R[Check error logs]
     
-    style D fill:#e3f2fd
-    style K fill:#e3f2fd
-    style N fill:#e3f2fd
-    style Q fill:#e3f2fd
+    style B fill:#c62828,stroke:#e65100
+    style D fill:#c62828,stroke:#e65100
+    style G fill:#c62828,stroke:#e65100
+    style H fill:#273078,stroke:#1b5e20
+    style K fill:#273078,stroke:#1b5e20
+    style M fill:#c62828,stroke:#e65100
+    style N fill:#273078,stroke:#1b5e20
+    style P fill:#c62828,stroke:#e65100
+    style Q fill:#273078,stroke:#1b5e20
 ```
 
 
@@ -116,10 +128,13 @@ flowchart TD
     M -->|Yes| N[Fixed]
     M -->|No| O[Check firewall]
     
-    style F fill:#e3f2fd
-    style G fill:#e3f2fd
-    style J fill:#e3f2fd
-    style N fill:#c8e6c9
+    style B fill:#c62828,stroke:#e65100
+    style C fill:#c62828,stroke:#e65100
+    style F fill:#273078,stroke:#1b5e20
+    style I fill:#c62828,stroke:#e65100
+    style J fill:#273078,stroke:#1b5e20
+    style M fill:#c62828,stroke:#e65100
+    style N fill:#273078,stroke:#1b5e20
 ```
 
 
@@ -147,10 +162,14 @@ flowchart TD
     L -->|Yes| M[Fixed]
     L -->|No| N[Check mkcert]
     
-    style D fill:#e3f2fd
-    style E fill:#e3f2fd
-    style K fill:#e3f2fd
-    style M fill:#c8e6c9
+    style B fill:#c62828,stroke:#e65100
+    style F fill:#273078,stroke:#1b5e20
+    style G fill:#273078,stroke:#1b5e20
+    style H fill:#c62828,stroke:#e65100
+    style I fill:#c62828,stroke:#e65100
+    style K fill:#273078,stroke:#1b5e20
+    style L fill:#c62828,stroke:#e65100
+    style M fill:#273078,stroke:#1b5e20
 ```
 
 
@@ -181,10 +200,10 @@ flowchart TD
     P -->|No| Q[Check firewall/network]
     P -->|Yes| R[Check port 22]
     
-    style K fill:#e3f2fd
-    style L fill:#e3f2fd
-    style N fill:#e3f2fd
-    style Q fill:#e3f2fd
+    style B fill:#c62828,stroke:#e65100
+    style G fill:#c62828,stroke:#e65100
+    style M fill:#c62828,stroke:#e65100
+    style P fill:#c62828,stroke:#e65100
 ```
 
 
@@ -312,7 +331,7 @@ If the decision trees don't help:
 
 **Solution**:
 1. Ensure Docker Desktop is running
-2. In AMP, go to Docker page and click "Start All"
+2. In AMP Manager, go to Docker page and click "Start All"
 3. Check Docker Desktop logs if containers fail to start
 4. Try restarting Docker Desktop
 
@@ -330,14 +349,17 @@ If the decision trees don't help:
 | `docker compose stop -t 0` | Stop containers quickly |
 | `docker compose restart --no-health` | Restart without waiting for health checks |
 
-**How AMP Handles This**:
-- AMP uses `docker compose start` for existing containers (faster, no re-pull)
+**How AMP Manager Handles This**:
+- AMP Manager uses `docker compose start` for existing containers (faster, no re-pull)
 - If you need to rebuild containers from scratch, run manually:
   ```cmd
   docker compose down
+  ```   
+  
+  ```cmd
   docker compose up -d
   ```
-- Then use AMP's "Start All" button for normal operations
+- Then use AMP Manager "Start All" button for normal operations
 
 
 ## Sync Issues
@@ -442,13 +464,21 @@ AMP Manager includes a built-in watchdog that monitors and auto-restarts the app
 
 | Step | Action |
 |------|--------|
-| 1 | App launches → saves PID, port, processName to config.json |
-| 2 | Watchdog spawns as background process |
-| 3 | Every 30 seconds, watchdog checks: |
+| 1 | App launches → saves PID, processName to config.json |
+| 2 | Watchdog spawns as background process (acquires lock) |
+| 3 | Every 20 seconds, watchdog checks: |
+|   | - Is exitFlag set? (user quitting?) |
 |   | - Is stored PID still running? |
-|   | - Is port responding? |
-| 4 | If checks fail 2 times in a row → kill and restart app |
+| 4 | If PID fails 3 times → restart app |
 | 5 | User sees login screen again - seamless recovery |
+
+#### Watchdog Configuration
+
+| Setting | Default | Purpose |
+|---------|---------|---------|
+| CHECK_INTERVAL | 20s | How often to check |
+| MAX_FAILURES | 3 | Failures before restart |
+| LOCK_FILE | `%TEMP%\amp_watchdog.lock` | Prevents duplicate watchdogs |
 
 #### Config.json Watchdog Data
 
@@ -457,11 +487,20 @@ AMP Manager includes a built-in watchdog that monitors and auto-restarts the app
   "lastUser": "domain",
   "processName": "amp-manager-win_x64.exe",
   "pid": "12345",
-  "port": 15125,
+  "exitFlag": false,
   "instanceId": "amp-1234567890-abc123",
   "launchedAt": 1234567890
 }
 ```
+
+#### exitFlag vs Crash Detection
+
+The watchdog uses `exitFlag` to distinguish clean exit from crash:
+
+| Scenario | exitFlag | Watchdog Response |
+|----------|---------|-------------------|
+| User clicks X | `true` | Cleanup lock, exit cleanly |
+| App crash | `false` | Count failures, restart after 3 |
 
 #### Manual Recovery (If Watchdog Fails)
 
@@ -470,7 +509,8 @@ If the watchdog cannot recover the app:
 1. Press `Ctrl+Shift+Esc` to open Task Manager
 2. Find "AMP Manager" or "A neutralino.js application"
 3. End the task
-4. Restart the app manually
+4. Delete `%TEMP%\amp_watchdog.lock` if it exists
+5. Restart the app manually
 
 
 ## See Also

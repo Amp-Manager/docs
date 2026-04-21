@@ -18,15 +18,16 @@ AMP Manager provides a unified interface for:
 - Visual workflow automation
 - Tunnel services integration (share local projects)
 
+## Prerequisites
+
+- Windows 10/11
+- Docker Desktop installed and running
+
 
 ## First Run Setup
 
 1. **Install Docker Desktop** - Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-2. **Install AMP Manager** - Download a release or clone to your drive
-
-<Badge type="warning" text="IMPORTANT" />
-
-> After running `npm run build:app`, you MUST run `post-build.bat` to apply the UAC manifest. Without this, the app runs without admin privileges and cannot install SSL certificates or modify the hosts file.
+2. **Install AMP Manager** - Download the latest [release to your drive](https://github.com/Amp-Manager/amp-manager/releases)
 
 
 ### Run Docker and Amp Manager
@@ -36,11 +37,24 @@ AMP Manager provides a unified interface for:
    ```
    docker compose up -d
    ```
-3. **Launch AMP Manager** - The dashboard will show all systems as "Healthy"
+3. **Launch AMP Manager**
+4. **Install Root CA**
+
+The dashboard will show all systems as "Healthy"
 
 <Badge type="info" text="System Checks" />
 
 > Docker must be running whenever you use AMP Manager. The Dashboard's System Checks section displays the current status. You can also use AMP Manager to launch and control Docker.
+
+### Creating Your First Domain
+
+1. Open AMP Manager
+2. Click "Add Domain"
+3. Enter domain name (e.g., `myproject`)
+4. Click Create
+
+Your domain is now available at `https://myproject.local` with automatic SSL!
+
 
 
 ## Tech Stack
@@ -51,6 +65,44 @@ AMP Manager provides a unified interface for:
 | Backend | Neutralino.js 6.5, Windows Batch (amp-tasks.bat) |
 | Storage | JSON Files (users/ folder), Web Crypto for encryption |
 | Containers | Docker Compose (Angie, PHP, MariaDB) |
+
+### Development
+
+1. Clone or download AMP Manager
+2. Open terminal in the project folder
+3. Run: `docker compose up -d`
+4. Run: `npm run build:app`
+5. Run: `post-build.bat`
+6. Launch `amp-manager.exe`
+
+<Badge type="warning" text="IMPORTANT" />
+
+> After running `npm run build:app`, you MUST run `post-build.bat` to apply the UAC manifest. Without this, the app runs without admin privileges and cannot install SSL certificates or modify the hosts file.
+
+
+## Key Concepts
+
+### Domains
+
+Local domains with automatic SSL. Each domain gets:
+- Auto-created folder in `www/`
+- SSL certificate via mkcert
+- Angie configuration
+- Hosts file entry
+
+### Containers
+
+Docker containers managed by AMP:
+- **Angie** - Web server
+- **PHP** - PHP runtime
+- **MariaDB** - Database
+- **Mailpit** - Mail
+
+
+### Encryption
+
+Sensitive data (credentials, notes, settings, workflows, site configs) is encrypted using AES-256-GCM with keys derived from your password.
+
 
 ## Documentation
 
@@ -72,64 +124,13 @@ AMP Manager provides a unified interface for:
 | [Glossary](./glossary) | Terms explained |
 
 
-
-## Quick Start
-
-### Prerequisites
-
-- Docker Desktop installed and running
-- Windows 10/11
-
-### Installation
-
-1. Clone or download AMP Manager
-2. Open terminal in the project folder
-3. Run: `docker compose up -d`
-4. Run: `npm run build:app`
-5. Run: `post-build.bat`
-6. Launch `amp-manager.exe`
-
-### Creating Your First Domain
-
-1. Open AMP Manager
-2. Click "Add Domain"
-3. Enter domain name (e.g., `mysite`)
-4. Click Create
-
-Your domain is now available at `http://mysite.local` with automatic SSL!
-
-
-
-## Key Concepts
-
-### Domains
-
-Local domains with automatic SSL. Each domain gets:
-- Auto-created folder in `www/`
-- SSL certificate via mkcert
-- Angie configuration
-- Hosts file entry
-
-### Containers
-
-Docker containers managed by AMP:
-- **Angie** - Web server
-- **PHP** - PHP runtime
-- **MariaDB** - Database
-
-### Encryption
-
-Sensitive data (credentials, notes, settings, workflows, site configs) is encrypted using AES-256-GCM with keys derived from your password.
-
-
-
 ## Support
 
 - Issues: [GitHub Issues](https://github.com/amp-manager/amp-manager/issues)
-- Discussions: [GitHub Discussions](https://github.com/amp-manager/amp-manager/discussions)
+- Troubleshooting: [GitHub Discussions](./troubleshooting)
 
 
 
 ## License
 
-MIT License - See LICENSE file for details.
+AMP Manager is released under the MIT License.

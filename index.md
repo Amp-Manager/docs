@@ -24,7 +24,7 @@ features:
   - icon: ⚡
     title: Quick Setup
     details: Get a full local web development environment running in minutes, no Docker experience needed.
-    link: /for-users # Link to a relevant page
+    link: /introduction # Link to a relevant page
     linkText: Learn More
   - icon: 🔒
     title: Automatic HTTPS/SSL

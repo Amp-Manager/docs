@@ -43,7 +43,7 @@ Get AMP Manager version info.
 
 ```typescript
 const info = await ampBridge.version();
-// { status: 'ok', version: '1.0.0', build: '2026-03-07', engine: 'amp-manager-batch' }
+// { status: 'ok', version: '1.0.0', build: '2026-03-07', engine: 'amp-manager' }
 ```
 
 

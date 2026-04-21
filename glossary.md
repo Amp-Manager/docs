@@ -11,25 +11,27 @@ A local website address. Like `google.com` on the internet, but `.local` domains
 
 **Example:** `myproject.local`
 
-**Related:** [Create a domain in AMP](./for-users#creating-your-first-site)
+**Related:** [Create a domain in AMP Manager](./for-users#creating-your-first-site)
 
 
 ### SSL/TLS Certificate
 
-A security certificate that enables HTTPS (secure connections). It proves your site is legitimate and encrypts data.
+A security certificate that enables HTTPS (secure connections).  
+It proves your site is legitimate and encrypts data.
 
 **Visual:**
 
 http://mysite.local    ->  <Badge type="danger" text="Unsecure" />   
-https://mysite.local   ->  <Badge type="info" text="Secure" /> (lock)
+https://mysite.local   ->  <Badge type="info" text="Secure" /> (icon lock)
 
 
 
 ### Sync
 
-The process AMP runs on every login to verify your environment is working correctly.
+The process AMP Manager runs on every login to verify your environment is working correctly.
 
-**What it checks:**
+**What it checks:**   
+
 1. Configuration files exist
 2. Docker is running
 3. SSL certificates are valid
@@ -46,16 +48,21 @@ A lightweight, isolated environment that runs a service (web server, database, e
 **AMP uses three containers:**
 | Container | Service |
 |-----------|---------|
-| `angie_amp` | Web server (nginx replacement) |
-| `php_amp` | PHP runtime |
-| `db_amp` | MariaDB database |
+| `angie` | Web server (nginx replacement) |
+| `php` | PHP runtime |
+| `db` | MariaDB database |
+| `mailpit` | Mail |
 
 
 ### CA (Certificate Authority)
 
-A "trusted issuer" that vouches for your SSL certificates. AMP uses `mkcert` to create a local CA.
+A "trusted issuer" that vouches for your SSL certificates.   
 
-**Why needed:** Without a CA, browsers won't trust your local SSL certificates.
+AMP uses `mkcert` to create a local CA.
+
+**Why needed:**    
+
+Without a CA, browsers won't trust your local SSL certificates.
 
 
 ## User-Facing Terms
@@ -84,7 +91,6 @@ A stored username/password or SSH key for external services.
 **Stored:** Encrypted in JSON files (`users/user_{username}/credentials.json`)
 
 
-
 ### Note
 
 A text note in AMP, optionally encrypted for sensitive information.
@@ -95,7 +101,6 @@ A text note in AMP, optionally encrypted for sensitive information.
 - Rich markdown support
 
 **Stored:** Encrypted in JSON files (`users/user_{username}/notes.json`)
-
 
 
 ### Tag
@@ -114,7 +119,8 @@ A label you can add to sites, notes, databases for organization.
 
 AMP Manager's primary storage system using JSON files in the `users/user_{username}/` folder.
 
-**Files in `users/user_{username}/`:**
+**Files in `users/user_{username}/`:**   
+  
 | File | Purpose | Encrypted |
 |------|---------|----------|
 | `user.json` | Auth (salt + validation) | No |
@@ -142,10 +148,9 @@ A state management library for React. Manages UI state that doesn't need to pers
 - Polling settings
 
 
-
 ### Neutralino.js
 
-The runtime that lets AMP run as a desktop app (instead of just a website).
+The runtime that lets AMP Manager run as a desktop app (instead of just a website).
 
 **Why Neutralino:**
 - Lightweight (no Electron overhead)
@@ -153,17 +158,17 @@ The runtime that lets AMP run as a desktop app (instead of just a website).
 - Secure API allowlist
 
 
-
 ### amp-tasks.bat
 
 The Windows batch script that handles all backend operations.
 
-**What it does:**
+**What it does:**  
+
 - Creates domains
 - Manages Docker
 - Handles SSL certificates
 - Manages databases
-
+- Watchdog restart
 
 
 ### hosts file
@@ -172,7 +177,7 @@ A Windows file that maps domain names to IP addresses.
 
 **Location:** `C:\Windows\System32\drivers\etc\hosts`
 
-**AMP adds entries like:**
+**AMP Manager adds entries like:**
 ```
 127.0.0.1    myproject.local
 ```
@@ -182,7 +187,8 @@ A Windows file that maps domain names to IP addresses.
 
 A tool that creates locally-trusted SSL certificates.
 
-**Used by AMP to:**
+**Used by AMP Manager to:**  
+
 - Create a local Certificate Authority
 - Generate certificates for `.local` domains
 
@@ -191,7 +197,8 @@ A tool that creates locally-trusted SSL certificates.
 
 The web server (nginx fork) that serves your local sites.
 
-**Why Angie:**
+**Why Angie:**  
+
 - Modern nginx fork
 - Better performance
 - Active development

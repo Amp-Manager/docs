@@ -82,21 +82,43 @@ The watchdog runs as a detached background process:
 |------|--------|
 | 1 | App starts → saves PID, port, instanceId to `config.json` |
 | 2 | `ampBridge.spawnWatchdog()` spawns `amp-tasks.bat watch` as background process |
-| 3 | Every 30s, checks: Is stored PID still running? Is port responding? |
-| 4 | If 2 failures in a row → kill app, restart automatically |
-| 5 | Monitoring continues after restart |
+| 3 | Every 20s, checks: Is stored PID still running? Is exitFlag set? |
+| 4 | If 3 failures in a row → kill app, restart automatically |
+| 5 | On clean exit: set exitFlag → delete lock → exit |
+
+**Lock File Mechanism** (prevents duplicate watchdogs):
 
 ```bat
-:: amp-tasks.bat :WATCH section
-:WATCH_LOOP
-timeout /t 30 /nobreak
-:: Check PID and port
-tasklist /fi "PID eq %STORED_PID%"
-netstat -ano | findstr ":%STORED_PORT%"
-:: If failures >= 2, restart app
+:: Check if lock file exists (another watchdog is running)
+if exist "%temp%\amp_watchdog.lock" (
+    exit /b 0
+)
+
+:: Acquire lock by creating empty file
+type nul > "%temp%\amp_watchdog.lock"
 ```
 
-See `src/services/AMPBridge.ts` for `spawnWatchdog()`, and `amp-tasks.bat:1514` for the Watchdog implementation.
+**ExitFlag Pattern** (clean user exit vs crash detection):
+
+```bat
+:: Check exitFlag FIRST - if user clicked X, this is true
+findstr /i "\"exitFlag\":true" "%config.json%"
+if not errorlevel 1 goto :CLEANUP
+
+:: Otherwise check if app is still running...
+tasklist /fi "PID eq %APP_PID%"
+```
+
+**Clean Close Flow:**
+1. `handleClose()` sets `exitFlag=true` in config.json
+2. Deletes `%temp%\amp_watchdog.lock`
+3. Exits app → watchdog sees exitFlag, cleans up lock, exits
+
+See:
+- `src/services/AMPBridge.ts:342-353` - `spawnWatchdog()` implementation
+- `src/services/AMPBridge.ts:359-389` - `killStaleWatchdogs()` (cleanup on startup)
+- `src/components/layout/Layout.tsx:245-277` - `handleClose()` 3-step flow
+- `amp-tasks.bat:1512-1585` - Full watchdog implementation
 
 
 ## Architecture Overview

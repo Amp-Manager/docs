@@ -397,27 +397,31 @@ AMP Manager includes a built-in watchdog that monitors the app for Neutralino.js
 ```mermaid
 flowchart TD
     A[App Starts] --> B[Generate Instance ID]
-    B --> C[Get PID & Port from Neutralino]
+    B --> C[Get PID from Neutralino]
     C --> D[Save to config.json]
-    D --> E[Spawn Watchdog Process]
-    E --> F[Every 30s: Check PID & Port]
-    F --> G{Still Running?}
-    G -->|Yes| F
-    G -->|No| H[Increment Failure Count]
-    H --> I{Failures ≥ 2?}
-    I -->|No| F
-    I -->|Yes| J[Kill App & Restart]
-    J --> K[Continue Monitoring]
+    D --> E[Acquire Lock File]
+    D --> F[Spawn Watchdog Process]
+    F --> G[Every 20s: Check exitFlag & PID]
+    G --> H{exitFlag true?}
+    H -->|Yes| I[Cleanup & Exit]
+    H -->|No| J{PID Alive?}
+    J -->|Yes| G
+    J -->|No| K[Increment Failure Count]
+    K --> L{Failures ≥ 3?}
+    L -->|No| G
+    L -->|Yes| M[Restart App]
+    M --> G
 ```
 
 ### Instance Info Flow
 
 | Step | File | Action |
 |------|------|--------|
-| 1 | `main.tsx` | Generate `instanceId`, get `NL_PID`, `NL_PORT` |
+| 1 | `main.tsx` | Generate `instanceId`, get `NL_PID` |
 | 2 | `db.ts:updateInstanceInfo()` | Save to config.json (merges with existing) |
-| 3 | `AMPBridge.ts:spawnWatchdog()` | Spawn background process |
-| 4 | `amp-tasks.bat :WATCH` | Read config.json, monitor PID/port |
+| 3 | `AMPBridge.ts:killStaleWatchdogs()` | Cleanup stale watchdogs on startup |
+| 4 | `AMPBridge.ts:spawnWatchdog()` | Spawn background process |
+| 5 | `amp-tasks.bat :WATCH` | Read config.json, monitor PID, check exitFlag |
 
 ### config.json Contents
 
@@ -427,9 +431,60 @@ flowchart TD
   "instanceId": "amp-1234567890-abc123",
   "processName": "amp-manager-win_x64.exe",
   "pid": "12345",
-  "port": 51717,
+  "exitFlag": false,
   "launchedAt": 1234567890123
 }
+```
+
+### Lock File Mechanism
+
+Prevents duplicate watchdogs from running simultaneously:
+
+```
+%TEMP%\amp_watchdog.lock
+```
+
+| Step | Action |
+|------|--------|
+| 1 | Check if lock file exists → if yes, another watchdog running, exit |
+| 2 | Create empty lock file to claim "ownership" |
+| 3 | Run monitoring loop |
+| 4 | On exit: delete lock file |
+
+### exitFlag Pattern
+
+Distinguishes clean user exit from app crash:
+
+| Scenario | exitFlag | Result |
+|----------|----------|--------|
+| User clicks X | `true` (set by frontend) | Watchdog cleans up lock, exits |
+| App crash | `false` | Watchdog counts failures, restarts app |
+
+**Why this matters:**
+- User clicks X → app sets exitFlag → watchdog exits cleanly
+- App crashes → exitFlag never set → watchdog detects PID gone → restarts app
+
+### Clean Close Flow
+
+When user clicks the X button:
+
+```typescript
+// src/components/layout/Layout.tsx:245-277
+const handleClose = async () => {
+  // STEP 1: Set exitFlag = true
+  const config = await loadConfigJSON() ?? {};
+  config.exitFlag = true;
+  config.exitTime = Date.now();
+  await saveConfigJSON(config);
+
+  // STEP 2: Delete lock file
+  await window.Neutralino.os.execCommand({
+    command: 'del "%TEMP%\amp_watchdog.lock" 2>nul'
+  });
+
+  // STEP 3: Exit app
+  await window.Neutralino.app.exit();
+};
 ```
 
 ### Important: Merge Pattern
@@ -463,9 +518,10 @@ All use the merge pattern to preserve instance info.
 | Problem | Solution |
 |---------|----------|
 | NeutralinoJS single-threaded event loop | Watchdog monitors from outside |
-| Backend becomes unresponsive (zombie) | PID/port checks detect failure |
-| `serverOffline` event unreliable | Independent 30s check cycle |
-| App appears frozen but process runs | Force restart after 2 failures |
+| Backend becomes unresponsive (zombie) | PID check detects failure |
+| `serverOffline` event unreliable | Independent 20s check cycle |
+| App appears frozen but process runs | Force restart after 3 failures |
+| No way to distinguish exit vs crash | exitFlag pattern enables clean detection |
 
 
 
